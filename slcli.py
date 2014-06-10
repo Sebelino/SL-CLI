@@ -1,7 +1,14 @@
 #!/usr/bin/python2.7
+# -*- coding: utf-8 -*-
 
 from urllib2 import urlopen
-import sensitive
+from sys import exit
+
+try:
+    import sensitive
+except ImportError:
+    print "Det verkar inte finnas en sensitive.py i din katalog. Läs installationsinstruktionerna."
+    exit(1)
 
 time = '9:15'
 start = 9506
