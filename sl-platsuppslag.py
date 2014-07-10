@@ -11,5 +11,5 @@ api = API(r'https://api.sl.se/api2/typeahead.json',{
 })
 
 if __name__ == '__main__':
-    cli(api,"Wrapper för API:et SL Platsuppslag.")
+    cli(api)
 
