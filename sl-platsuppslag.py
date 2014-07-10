@@ -1,23 +1,15 @@
 #!/usr/bin/python2.7
 # -*- coding: utf-8 -*-
 
-from urllib2 import urlopen
-from sys import exit
-import json
-from pprint import pprint
+from api import API,cli
 
-try:
-    import sensitive
-except ImportError:
-    print "Det verkar inte finnas en sensitive.py i din katalog. Läs installationsinstruktionerna."
-    exit(1)
+api = API(r'https://api.sl.se/api2/typeahead.json',{
+    'key' : {'required':True,'description':"Din API-nyckel."},
+    'searchstring' : {'required':True,'description':"Söksträngen."},
+    'stationsonly' : {'required':False,'domain':bool,'default':True,'description':"Om \"True\" returneras endast hållplatser."},
+    'maxresults' : {'required':False,'domain':set(range(50+1)),'default':10,'description':"Maximalt antal resultat som önskas."},
+})
 
-searchstring = 'vårsta'
-urltemplate = r'https://api.sl.se/api2/typeahead.json?key=%s&searchstring=%s'
-url = urltemplate % (sensitive.sl_platsuppslag,searchstring)
-
-print url
-jsonresponse = urlopen(url).read().decode('iso-8859-1')
-dictresponse = json.loads(jsonresponse)
-pprint(dictresponse)
+if __name__ == '__main__':
+    cli(api,"Wrapper för API:et SL Platsuppslag.")
 
