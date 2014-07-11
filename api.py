@@ -18,11 +18,14 @@ def requestURL(url):
 
 def cli(api):
     parser = argparse.ArgumentParser()
-    for (a,b) in api.interface():
+    interface = api.interface()
+    for (a,b) in interface.iteritems():
         optionalprefix = '' if b['required'] else '--'
         parser.add_argument('%s%s'% (optionalprefix,a),default=b['default'] if 'default' in b else '',help=b['description'])
     args = parser.parse_args()
-    response = api.request(vars(args))
+    argdict = vars(args)
+    argdict = dict([(arg,val) for arg,val in argdict.iteritems() if 'default' not in interface[arg]])
+    response = api.request(argdict)
     if not response:
         sys.exit()
     print response
@@ -41,11 +44,10 @@ class API:
         Example: https://api.sl.se/api2/typeahead.json?key=123abc&searchstring=Vårsta
     """
     def context(self,values):
-        filteredvals = dict((k,v) for k,v in values.items() if v)
-        for key,_ in filteredvals.iteritems():
+        for key,_ in values.iteritems():
             if key not in self._interface:
                 raise Exception("Parameter %s not in this API."% key)
-        s = self._baseurl+'?'+urllib.urlencode(filteredvals)
+        s = self._baseurl+'?'+urllib.urlencode(values)
         return s
 
     def __str__(self):
@@ -56,7 +58,7 @@ class API:
         return s
 
     def interface(self):
-        return self._interface.iteritems()
+        return self._interface
 
     def request(self,values):
         return requestURL(self.context(values))
@@ -72,6 +74,6 @@ if __name__ == '__main__':
     print "\nSample URL with %s:"% vals
     print testapi.context(vals)
     print "Iterating over the API parameters:"
-    for (a,b) in testapi.interface():
+    for (a,b) in testapi.interface().iteritems():
         print '%s -> %s'% (a,b)
 
