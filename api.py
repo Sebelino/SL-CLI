@@ -11,7 +11,7 @@ def requestURL(url):
     try:
         jsonresponse = urllib2.urlopen(url).read().decode('iso-8859-1')
     except urllib2.URLError:
-        print 'Kunde inte öppna URL. Är din internetuppkoppling nere?'
+        print 'Kunde inte öppna URL. Felaktig URL, eller så är din internetuppkoppling nere.'
         return None
     dictresponse = json.loads(jsonresponse)
     return dictresponse
