@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse,sys,urllib,urllib2,json
+import xmltodict
 from copy import deepcopy
 
 """ URL -> dict """
@@ -9,11 +10,14 @@ from copy import deepcopy
 def requestURL(url):
     print "Requesting URL: %s"% url
     try:
-        jsonresponse = urllib2.urlopen(url).read().decode('iso-8859-1')
+        response = urllib2.urlopen(url).read().decode('iso-8859-1')
     except urllib2.URLError:
-        print 'Kunde inte öppna URL. Felaktig URL, eller så är din internetuppkoppling nere.'
+        print "Kunde inte öppna URL. Felaktig URL, eller så är din internetuppkoppling nere."
         return None
-    dictresponse = json.loads(jsonresponse)
+    try:
+        dictresponse = json.loads(response)
+    except ValueError:
+        dictresponse = xmltodict.parse(response)
     return dictresponse
 
 def cli(api):

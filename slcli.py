@@ -1,25 +1,53 @@
 #!/usr/bin/python2.7
 # -*- coding: utf-8 -*-
 
-from urllib2 import urlopen
-from sys import exit
-import json
 from pprint import pprint
+import re
 
-try:
-    import sensitive
-except ImportError:
-    print "Det verkar inte finnas en sensitive.py i din katalog. Läs installationsinstruktionerna."
-    exit(1)
+from reseplanerare import api as rapi
+from platsuppslag import api as papi
+from api import requestURL,API
+from keyreader import read_keys
 
-time = '9:15'
-start = 9506
-stop = 9526
-urltemplate = r'https://api.trafiklab.se/sl/reseplanerare.json?key=%s&S=%s&Z=%s&time=%s'
-url = urltemplate % (sensitive.sl_reseplanerare,start,stop,time)
+slapi = API('http://xml.reseplanerare.sl.se:8080/bin/query.exe/sn',{
+    'ident' : {'required':True},
+    'seqnr' : {'required':True},
+    'L' : {'required':True},
+    'getIntermediateStops' : {'required':True},
+})
 
-print url
-jsonresponse = urlopen(url).read().decode('iso-8859-1')
-dictresponse = json.loads(jsonresponse)
-pprint(dictresponse)
+apikeys = read_keys()
+
+def sitedata(searchstring):
+    presponse = papi.request({'key':apikeys['platsuppslag'],'searchstring':searchstring})
+    topentry = presponse['ResponseData'][0]
+    return {'name':topentry['Name'],'id':topentry['SiteId']}
+
+startpoint = sitedata('vårsta')
+endpoint = sitedata('tekniska högskolan')
+time = '20:15'
+
+rresponse = rapi.request({'key':apikeys['reseplanerare'],'s':startpoint['id'],'z':endpoint['id'],'time':time})
+trip = {'Origin':startpoint['name'],'Destination':endpoint['name'],'trip' : []}
+for subtrip in rresponse['HafasResponse']['Trip'][0]['SubTrip']:
+    st = {'Origin':subtrip['Origin']['#text'],'Destination':subtrip['Destination']['#text'],'trip':[]}
+    intermediateurl = subtrip['IntermediateStopsQuery']
+
+    """ Rad 1 nedanför konformerar till dokumentationen; rad 2 konformerar till det faktiska beteendet. """
+    #matchings = re.search(r'intermediate/([^/]*)/([^/]*)/([^.]*).json',intermediateurl,re.I|re.U)
+    matchings = re.search(r'intermediate/([^/]*)/([^/]*)/[^/]*(C[^.]*).json',intermediateurl,re.I|re.U)
+
+    (a,b,c) = [matchings.group(i) for i in (1,2,3)]
+    resp = slapi.request({'ident':a,'seqnr':b,'L':'vs_xml','getIntermediateStops':c})
+    indices = ['Name','ArrivalDate','ArrivalTime','DepartureDate','DepartureTime']
+    for subsubtrip in resp['HafasResponse']['IntermediateStops']['IntermediateStop']:
+        insertion = dict()
+        for i in indices:
+            if isinstance(subsubtrip[i],basestring):
+                insertion[i] = subsubtrip[i]
+            else:
+                insertion[i] = subsubtrip[i]['#text']
+        st['trip'].append(insertion)
+    trip['trip'].append(st)
+pprint(trip)
 
