@@ -52,6 +52,22 @@ def travel(origin,destination,time):
         trip['trip'].append(st)
     return trip
 
+def printtrip(trip):
+    print "%s - %s"% (trip['Origin'],trip['Destination'])
+    maxlength = 0
+    for subtrip in trip['trip']:
+        for subsubtrip in subtrip['trip']:
+            maxlength = max(maxlength,len(subsubtrip['Name']))
+    for subtrip in trip['trip']:
+        print "\t%s - %s"% (subtrip['Origin'],subtrip['Destination'])
+        for subsubtrip in subtrip['trip']:
+            n = subsubtrip['Name']+' '*(maxlength-len(subsubtrip['Name']))
+            dt = subsubtrip['DepartureTime']
+            dd = subsubtrip['DepartureDate']
+            at = subsubtrip['ArrivalTime']
+            ad = subsubtrip['ArrivalDate']
+            print "\t\t%s : %s %s - %s %s"% (n,dt,dd,at,ad)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('origin',metavar='from',help="Varifrån ska du resa?")
@@ -59,5 +75,5 @@ if __name__ == '__main__':
     parser.add_argument('at',help="När ska du bege dig?")
     args = parser.parse_args()
     results = travel(args.origin,args.to,args.at)
-    pprint(results)
+    printtrip(results)
 

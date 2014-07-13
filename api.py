@@ -8,7 +8,7 @@ from copy import deepcopy
 """ URL -> dict """
 """ Returns None if the site could not be accessed. """
 def requestURL(url):
-    print "Requesting URL: %s"% url
+    #print "Requesting URL: %s"% url
     try:
         response = urllib2.urlopen(url).read().decode('iso-8859-1')
     except urllib2.URLError:
