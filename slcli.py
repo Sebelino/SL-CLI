@@ -26,12 +26,27 @@ def travel(origin,destination,time):
 
     startpoint = sitedata(origin)
     endpoint = sitedata(destination)
-    time = '20:15'
 
     rresponse = rapi.request({'key':apikeys['reseplanerare'],'s':startpoint['id'],'z':endpoint['id'],'time':time})
-    trip = {'Origin':startpoint['name'],'Destination':endpoint['name'],'trip' : []}
-    for subtrip in rresponse['HafasResponse']['Trip'][0]['SubTrip']:
-        st = {'Origin':subtrip['Origin']['#text'],'Destination':subtrip['Destination']['#text'],'trip':[]}
+    trips = rresponse['HafasResponse']['Trip']
+    toptrip = trips[0]
+    result = {
+        'Origin':startpoint['name'],
+        'Destination':endpoint['name'],
+        'DepartureTime':toptrip['Summary']['DepartureTime']['#text'],
+        'DepartureDate':toptrip['Summary']['DepartureDate'],
+        'trip' : [],
+    }
+    for subtrip in toptrip['SubTrip']:
+        st = {
+            'Origin':subtrip['Origin']['#text'],
+            'Destination':subtrip['Destination']['#text'],
+            'DepartureTime':subtrip['DepartureTime']['#text'],
+            'DepartureDate':subtrip['DepartureDate'],
+            'ArrivalTime':subtrip['ArrivalTime']['#text'],
+            'ArrivalDate':subtrip['ArrivalDate'],
+            'trip':[],
+        }
         intermediateurl = subtrip['IntermediateStopsQuery']
 
         """ Rad 1 nedanför konformerar till dokumentationen; rad 2 konformerar till det faktiska beteendet. """
@@ -49,24 +64,28 @@ def travel(origin,destination,time):
                 else:
                     insertion[i] = subsubtrip[i]['#text']
             st['trip'].append(insertion)
-        trip['trip'].append(st)
-    return trip
+        result['trip'].append(st)
+    return result
+
+#def fixencoding(text):
+#    return text.replace('Ã¥','å').replace('Ã¥','ä').replace('Ã¥','ö')
 
 def printtrip(trip):
-    print "%s - %s"% (trip['Origin'],trip['Destination'])
+    print "%s %s %s - %s"% (trip['DepartureTime'],trip['DepartureDate'],trip['Origin'],trip['Destination'])
     maxlength = 0
     for subtrip in trip['trip']:
         for subsubtrip in subtrip['trip']:
             maxlength = max(maxlength,len(subsubtrip['Name']))
     for subtrip in trip['trip']:
-        print "\t%s - %s"% (subtrip['Origin'],subtrip['Destination'])
+        print "%s....%s"% (subtrip['DepartureTime'],subtrip['Origin'])
         for subsubtrip in subtrip['trip']:
             n = subsubtrip['Name']+' '*(maxlength-len(subsubtrip['Name']))
             dt = subsubtrip['DepartureTime']
             dd = subsubtrip['DepartureDate']
             at = subsubtrip['ArrivalTime']
             ad = subsubtrip['ArrivalDate']
-            print "\t\t%s : %s %s - %s %s"% (n,dt,dd,at,ad)
+            print "%s........%s"% (dt,n)
+        print "%s....%s"% (subtrip['ArrivalTime'],subtrip['Destination'])
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
