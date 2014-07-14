@@ -9,6 +9,12 @@ from platsuppslag import api as papi
 from api import requestURL,API
 from keyreader import read_keys
 
+""" :returns: Properties of the trip
+    :param origin: Location of the origin
+    :param destination: Location of the destination
+    :param time: When to depart
+    The origin and destination do not need to perfectly match the actual names in the API.
+"""
 def travel(origin,destination,time):
     slapi = API('http://xml.reseplanerare.sl.se:8080/bin/query.exe/sn',{
         'ident' : {'required':True},
@@ -67,6 +73,8 @@ def travel(origin,destination,time):
         result['trip'].append(st)
     return result
 
+""" Pretty-printing.
+"""
 def printtrip(trip):
     header = "%s %s %s - %s"% (trip['DepartureTime'],trip['DepartureDate'],trip['Origin'],trip['Destination'])
     print header.encode('cp1252')

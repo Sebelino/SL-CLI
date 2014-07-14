@@ -5,8 +5,8 @@ import argparse,sys,urllib,urllib2,json
 import xmltodict
 from copy import deepcopy
 
-""" URL -> dict """
-""" Returns None if the site could not be accessed. """
+""" URL -> dict.
+    :returns: None if the site could not be accessed """
 def requestURL(url):
     #print "Requesting URL: %s"% url
     try:
@@ -20,6 +20,7 @@ def requestURL(url):
         dictresponse = xmltodict.parse(response)
     return dictresponse
 
+""" Enables the user to specify command-line arguments. """
 def cli(api):
     parser = argparse.ArgumentParser()
     interface = api.interface()
@@ -34,17 +35,19 @@ def cli(api):
         sys.exit()
     print response
 
+""" Any API associated with trafiklab.se. """
 class API:
 
     """
-        param: baseurl
+        :param baseurl: Entry point URL for the API
+        :param interface: Properties of the query parameters
     """
     def __init__(self,baseurl,interface):
         self._baseurl = baseurl
         self._interface = interface
 
     """
-        returns: An URL with the parameters and its respecive parameters added.
+        :returns: An URL with the parameters and its respecive parameters added.
         Example: https://api.sl.se/api2/typeahead.json?key=123abc&searchstring=Vårsta
     """
     def context(self,values):
