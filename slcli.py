@@ -67,11 +67,9 @@ def travel(origin,destination,time):
         result['trip'].append(st)
     return result
 
-#def fixencoding(text):
-#    return text.replace('Ã¥','å').replace('Ã¥','ä').replace('Ã¥','ö')
-
 def printtrip(trip):
-    print "%s %s %s - %s"% (trip['DepartureTime'],trip['DepartureDate'],trip['Origin'],trip['Destination'])
+    header = "%s %s %s - %s"% (trip['DepartureTime'],trip['DepartureDate'],trip['Origin'],trip['Destination'])
+    print header.encode('cp1252')
     maxlength = 0
     for subtrip in trip['trip']:
         for subsubtrip in subtrip['trip']:
