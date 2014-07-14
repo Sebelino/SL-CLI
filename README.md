@@ -67,7 +67,7 @@ $ ./keyreader.py reseplanerare | xargs -I % ./reseplanerare.py 9506 % '9:15' 952
 ```
 där
 * **9506** är ID:t för Sollentuna
-* **%** är en placeholder för en API-nyckel som keyreader.py spottar ut
+* **%** är en placeholder för en API-nyckel som **keyreader.py** spottar ut
 * **9:15** är tidpunkten för avgång
 * **9526** är ID:t för Flemingsberg
 
