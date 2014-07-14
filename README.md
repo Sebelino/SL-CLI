@@ -3,13 +3,13 @@ SL-CLI
 
 Stockholms Lokaltrafik - Command Line Interface.
 
-# Dependencies
-* xmltodict
-
 # Installation
 1. Skapa en kopia av *sensitive.example.xml* som du kallar *sensitive.xml*.
 2. Öppna *sensitive.xml* och byt ut de fejkade API-nycklarna mot riktiga nycklar. Har du inga
    nycklar kan du skaffa dem på *trafiklab.se*.
+
+## Dependencies
+* xmltodict
 
 # slcli
 Med modulen slcli.py kan du få reseinformation direkt i terminalen. Se manualen:
