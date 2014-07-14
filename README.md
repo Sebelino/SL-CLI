@@ -56,7 +56,7 @@ $ ./slcli.py vårsta "tekniska högskolan" 8:00
 ```
 
 # API-moduler
-Utöver det användarvänliga slcli.py finns två wrapper-moduler för API:erna SL Reseplanerare
+Utöver det användarvänliga **slcli.py** finns två wrapper-moduler för API:erna SL Reseplanerare
 respektive SL Platsuppslag. CLI-argumenten till dessa är samma som de faktiska query-parametrarna;
 se **--help** för en beskrivning. Output är JSON.
 
