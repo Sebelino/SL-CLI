@@ -13,7 +13,7 @@ Stockholms Lokaltrafik - Command Line Interface.
 
 # slcli
 Med modulen slcli.py kan du få reseinformation direkt i terminalen. Se manualen:
-```
+```bash
 $ ./slcli.py --help
 usage: slcli.py [-h] from to at
 
@@ -26,7 +26,7 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 Exempel på användning:
-```
+```bash
 $ ./slcli.py vårsta "tekniska högskolan" 8:00                   
 08:08 14.07.14 Vårsta centrum (Botkyrka) - Tekniska högskolan (Stockholm)
 08:08....Vårsta centrum
