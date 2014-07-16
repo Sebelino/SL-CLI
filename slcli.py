@@ -43,6 +43,8 @@ def travel(origin,destination,time):
         'DepartureDate':toptrip['Summary']['DepartureDate'],
         'trip' : [],
     }
+    if isinstance(toptrip['SubTrip'],dict):
+        toptrip['SubTrip'] = [toptrip['SubTrip']]
     for subtrip in toptrip['SubTrip']:
         st = {
             'Origin':subtrip['Origin']['#text'],
