@@ -7,11 +7,12 @@ from copy import deepcopy
 
 """ URL -> dict.
     :returns: None if the site could not be accessed """
-def requestURL(url):
+def requestURL(url,retries=10):
     #print "Requesting URL: %s"% url
     try:
         response = urllib2.urlopen(url).read().decode('iso-8859-1')
     except urllib2.URLError:
+        return requestURL(url,retries-1)
         print "Kunde inte öppna URL. Felaktig URL, eller så är din internetuppkoppling nere."
         return None
     try:
