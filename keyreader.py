@@ -5,7 +5,7 @@ import argparse,sys,os
 import xml.etree.ElementTree as ET
 
 def read_keys():
-    xmlfile = 'sensitive.xml'
+    xmlfile = os.path.join(os.path.dirname(os.path.realpath(__file__)),'sensitive.xml')
     if not os.path.isfile(xmlfile):
         raise Exception("Filen %s saknas."% xmlfile)
     tree = ET.parse(xmlfile)
