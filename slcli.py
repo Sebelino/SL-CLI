@@ -8,6 +8,7 @@ from reseplanerare import api as rapi
 from platsuppslag import api as papi
 from api import requestURL,API
 from keyreader import read_keys
+from collections import OrderedDict
 
 """ :returns: Properties of the trip
     :param origin: Location of the origin
@@ -64,7 +65,10 @@ def travel(origin,destination,time):
         (a,b,c) = [matchings.group(i) for i in (1,2,3)]
         resp = slapi.request({'ident':a,'seqnr':b,'L':'vs_xml','getIntermediateStops':c})
         indices = ['Name','ArrivalDate','ArrivalTime','DepartureDate','DepartureTime']
-        for subsubtrip in resp['HafasResponse']['IntermediateStops']['IntermediateStop']:
+        subsubtrips = resp['HafasResponse']['IntermediateStops']['IntermediateStop']
+        if isinstance(subsubtrips,OrderedDict):
+            subsubtrips = [subsubtrips]
+        for subsubtrip in subsubtrips:
             insertion = dict()
             for i in indices:
                 if isinstance(subsubtrip[i],basestring):
