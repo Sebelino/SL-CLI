@@ -9,7 +9,7 @@ Stockholms Lokaltrafik - Command Line Interface.
    nycklar kan du skaffa dem på **trafiklab.se**.
 
 ## Dependencies
-* xmltodict
+* [xmltodict](https://github.com/martinblech/xmltodict)
 
 # slcli
 Med modulen **slcli.py** kan du få reseinformation direkt i terminalen. Se manualen:
