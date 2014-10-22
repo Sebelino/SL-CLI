@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root>
-    <key name="sl-platsuppslag" >1234567890abcdefghijklmnopqrstuv</key>
-    <key name="sl-reseplanerare">1234567890abcdefghijklmnopqrstuv</key>
+    <key name="platsuppslag" >1234567890abcdefghijklmnopqrstuv</key>
+    <key name="reseplanerare">1234567890abcdefghijklmnopqrstuv</key>
 </root>
 
