@@ -3,6 +3,8 @@ SL-CLI
 
 Stockholms Lokaltrafik - Command Line Interface.
 
+UPDATE: Det här programmet ser ut att ha slutat fungera korrekt, troligtvis i och med SL:s API-uppdatering. Ska se om jag kan fixa det när jag får tid.
+
 # Installation
 1. Skapa en kopia av **sensitive.example.xml** som du kallar **sensitive.xml**.
 2. Öppna **sensitive.xml** och byt ut de fejkade API-nycklarna mot riktiga nycklar. Har du inga
