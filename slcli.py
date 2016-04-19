@@ -50,7 +50,7 @@ def travel(origin, destination, time):
             sameid = [s['id'] in {oid, did} for s in allstops]
             (oindex, dindex) = [i for i, e in enumerate(sameid) if e]
             stops = allstops[oindex+1:dindex]
-            subsubtrips = [{'arrivalTime': s['arrTime'], 'destination':
+            subsubtrips = [{'arrivalTime': s['arrTime'], 'stop':
                             s['name']} for s in stops]
         else:
             subsubtrips = []
@@ -84,7 +84,7 @@ def printtrip(trip):
         print(originstr)
         for subsubtrip in subtrip['trip']:
             t = subsubtrip['arrivalTime']
-            d = subsubtrip['destination']
+            d = subsubtrip['stop']
             intermediatestr = t+u'.'*8+d
             print(intermediatestr)
         destinationstr = u'{}....{}'.format(subtrip['arrivalTime'],
