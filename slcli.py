@@ -3,6 +3,7 @@
 
 import argparse
 import logging
+from time import time
 
 from reseplanerare2 import tripapi, journeydetailapi as japi
 from platsuppslag import api as papi
@@ -98,5 +99,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
+        starttime = time()
     results = travel(args.origin, args.to, args.at)
+    if args.verbose:
+        elapsedtime = time()-starttime
+        logging.debug("Elapsed request time: {0:.2f} seconds"
+                      .format(elapsedtime))
     printtrip(results)
