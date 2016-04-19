@@ -1,17 +1,17 @@
-#!/usr/bin/python2.7
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import argparse,sys,urllib,urllib2,json
+import argparse,sys,urllib,json
 import xmltodict
 from copy import deepcopy
 
 """ URL -> dict.
     :raises: Exception if the site could not be accessed """
 def requestURL(url,retries=10):
-    print "Requesting URL: %s"% url
+    print("Requesting URL: %s"% url)
     try:
-        response = urllib2.urlopen(url).read().decode('iso-8859-1')
-    except urllib2.URLError:
+        response = urllib.request.urlopen(url).read().decode('iso-8859-1')
+    except urllib.error.URLError:
         return requestURL(url,retries-1)
         raise Exception("Kunde inte öppna URL. Felaktig URL, eller så är din internetuppkoppling nere.")
         return None
@@ -22,7 +22,7 @@ def requestURL(url,retries=10):
     return dictresponse
 
 def unquote(ustr):
-    return urllib2.unquote(ustr.decode('utf8'))
+    return urllib.parse.unquote(ustr)
 
 """ Enables the user to specify command-line arguments. """
 def cli(api):
@@ -37,7 +37,7 @@ def cli(api):
     response = api.request(argdict)
     if not response:
         sys.exit()
-    print response
+    print(response)
 
 """ Any API associated with trafiklab.se. """
 class API:
@@ -55,10 +55,10 @@ class API:
         Example: https://api.sl.se/api2/typeahead.json?key=123abc&searchstring=Vårsta
     """
     def context(self,values):
-        for key,_ in values.iteritems():
+        for key,_ in values.items():
             if key not in self._interface:
                 raise Exception("Parameter %s not in this API."% key)
-        s = self._baseurl+'?'+urllib.urlencode(values)
+        s = self._baseurl+'?'+urllib.parse.urlencode(values)
         return s
 
     def __str__(self):
@@ -75,16 +75,16 @@ class API:
         return requestURL(self.context(values))
 
 if __name__ == '__main__':
-    print "Sample API instance:"
+    print("Sample API instance:")
     testapi = API('https://api.sl.se/api2/typeahead.json',{
         'key' : "API-nyckel",
         'searchstring' : "Söksträng för platsen",
     })
-    print str(testapi)
+    print(str(testapi))
     vals = {'key':'1234abcd','searchstring':"Vårsta"}
-    print "\nSample URL with %s:"% vals
-    print testapi.context(vals)
-    print "Iterating over the API parameters:"
+    print("\nSample URL with %s:"% vals)
+    print(testapi.context(vals))
+    print("Iterating over the API parameters:")
     for (a,b) in testapi.interface().iteritems():
-        print '%s -> %s'% (a,b)
+        print('%s -> %s'% (a,b))
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import argparse,sys,os
@@ -17,5 +17,5 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('api',choices=list(keys))
     args = parser.parse_args()
-    print keys[args.api]
+    print(keys[args.api])
 
