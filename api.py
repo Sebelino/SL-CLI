@@ -56,7 +56,7 @@ def cli(api):
     response = api.request(argdict)
     if not response:
         sys.exit()
-    print(response)
+    print(json.dumps(response))
 
 
 class API:
