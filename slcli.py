@@ -38,6 +38,8 @@ def travel(origin, destination, time):
     toptrip = trips[0]['LegList']['Leg']
     subtrips = []
     for st in toptrip:
+        if st['type'] == 'WALK':  # Skip information about walking
+            continue
         if 'JourneyDetailRef' in st:
             refvalue = unquote(st['JourneyDetailRef']['ref'][6:])
             sstsresponse = japi.request({'key': apikeys['reseplanerare2'],
@@ -52,14 +54,14 @@ def travel(origin, destination, time):
                             s['name']} for s in stops]
         else:
             subsubtrips = []
-        st = {
+        subtrip = {
             'departureTime': st['Origin']['time'],
             'origin': st['Origin']['name'],
             'trip': subsubtrips,
             'arrivalTime': st['Destination']['time'],
             'destination': st['Destination']['name'],
         }
-        subtrips.append(st)
+        subtrips.append(subtrip)
     result = {
         'departureDate': toptrip[0]['Origin']['date'],
         'departureTime': toptrip[0]['Origin']['time'],
