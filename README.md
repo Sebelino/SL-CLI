@@ -3,73 +3,84 @@ SL-CLI
 
 Stockholms Lokaltrafik - Command Line Interface.
 
-UPDATE: Det här programmet ser ut att ha slutat fungera korrekt, troligtvis i och med SL:s API-uppdatering. Ska se om jag kan fixa det när jag får tid.
-
 # Installation
 1. Skapa en kopia av **sensitive.example.xml** som du kallar **sensitive.xml**.
 2. Öppna **sensitive.xml** och byt ut de fejkade API-nycklarna mot riktiga nycklar. Har du inga
-   nycklar kan du skaffa dem på **trafiklab.se**.
+   nycklar kan du skaffa dem på **trafiklab.se**. Du behöver nycklar för API:erna *Platsuppslag* och *Reseplanerare 2*.
 
 ## Dependencies
-* [xmltodict](https://github.com/martinblech/xmltodict)
+* [Python3](https://www.python.org/downloads/)
+  * [xmltodict](https://github.com/martinblech/xmltodict)
 
 # slcli
-Med modulen **slcli.py** kan du få reseinformation direkt i terminalen. Se manualen:
+Med modulen **slcli.py** får reseinformation direkt i terminalen. Se manualen:
 ```bash
-$ ./slcli.py --help
-usage: slcli.py [-h] from to at
+$ python3 slcli.py -h
+usage: slcli.py [-h] [--verbose] from to at
 
 positional arguments:
-  from        Varifrån ska du resa?
-  to          Vart ska du?
-  at          När ska du bege dig?
+  from           Varifrån ska du resa?
+  to             Vart ska du?
+  at             När ska du bege dig?
 
 optional arguments:
-  -h, --help  show this help message and exit
+  -h, --help     show this help message and exit
+  --verbose, -v  Skriv ut debuggutskrifter
 ```
 Exempel på användning:
 ```bash
-$ ./slcli.py vårsta "tekniska högskolan" 8:00                   
-08:08 14.07.14 Vårsta centrum (Botkyrka) - Tekniska högskolan (Stockholm)
-08:08....Vårsta centrum
-08:09........Malmtorp           
-08:10........Bergudden          
-08:12........Kassmyra           
-08:14........Skäcklinge         
-08:15........Skäcklinge gårdsväg
-08:17........Lövholmenvägen     
-08:18........Toppvägen          
-08:19........Hålvägen           
-08:20........Passvägen          
-08:23....Tumba station
-08:33....Tumba
-08:37........Tullinge           
-08:40........Flemingsberg       
-08:43........Huddinge           
-08:46........Stuvsta            
-08:49........Älvsjö             
-08:52........Årstaberg          
-08:55........Stockholms södra   
-08:59....Stockholms central
-09:11....T-Centralen
-09:13........Östermalmstorg     
-09:15........Stadion            
-09:17....Tekniska högskolan
+$ ./slcli.py vårsta "tekniska högskolan" 8:00
+08:06 2016-04-20 Vårsta centrum (Botkyrka) - Tekniska högskolan (Stockholm):
+08:06....Vårsta centrum
+08:07........Malmtorp
+08:08........Bergudden
+08:11........Kassmyra
+08:13........Skrävstavägen
+08:13........Solbo
+08:18....Tumba station
+08:26....Tumba
+08:30........Tullinge
+08:33........Flemingsberg
+08:36........Huddinge
+08:39........Stuvsta
+08:42........Älvsjö
+08:45........Årstaberg
+08:48........Stockholms södra
+08:52....Stockholms central
+08:59....T-Centralen
+09:02........Östermalmstorg
+09:03........Stadion
+09:05....Tekniska högskolan
 ```
 
 # API-moduler
-Utöver det användarvänliga **slcli.py** finns två wrapper-moduler för API:erna SL Reseplanerare
-respektive SL Platsuppslag. CLI-argumenten till dessa är samma som de faktiska query-parametrarna;
-se **--help** för en beskrivning. Output är JSON.
+Utöver det användarvänliga **slcli.py** finns det några wrapper-moduler för API:erna SL Platsuppslag och SL Reseplanerare 2. CLI-argumenten till dessa är samma som de faktiska query-parametrarna; se **--help** för en beskrivning. Output är JSON.
+./keyreader.py platsuppslag | xargs -I % ./platsuppslag.py % vårsta
 
-Exempel på direkt använding av API-modulen **reseplanerare.py** i GNU/Linux:
+## Exempel: platsuppslag.py
 ```bash
-$ ./keyreader.py reseplanerare | xargs -I % ./reseplanerare.py 9506 % '9:15' 9526       
-{u'HafasResponse': {u'Trip': [{u'SubTrip': {u'Origin': {u'#text': u'Sollentuna', u'@x': u'17948833', u'@sa': u'200105061', u'@y': u'59428019'}, u'DepartureTime': {u'#text': u'09:27', u'@type': u'EXACT'}, u'IntermediateStopsQuery': u'https://api.trafiklab.se/sl/reseplanerare/intermediate/le.01426453.1405147882/1/C0-0:0.json', u'ArrivalDate': u'12.07.14', u'Destination': {u'#text': u'Flemingsberg', u'@x': u'17947206', u'@sa': u'200105171', u'@y': u'59219047'}, u'DepartureDate': u'12.07.14', u'ArrivalTime': {u'#text': u'10:05', u'@type': u'EXACT'}, u'RTUMessages': {u'RTUMessage': u'Kommande h\xe4ndelse: Pendelt\xe5gen stannar inte i Solna, Ulriksdal och Helenelund sena kv\xe4llar och n\xe4tter 25 juli - 3 augusti pga underh\xe5llsarbete. L\xe4s mer under Aktuellt p\xe5 sl.se'}, u'Transport': {u'Line': u'36', u'Towards': u'S\xf6dert\xe4lje C', u'Type': u'TRN', u'Name': u'pendelt\xe5g 36'}}, u'Summary': {u'Origin': {u'#text': u'Sollentuna', u'@x': u'17948833', u'@sa': u'200105061', u'@y': u'59428019'}, u'DepartureTime': {u'#text': u'09:27', u'@type': u'EXACT'}, u'CO2': u'0,0', u'PriceInfo': {u'TariffZones': u'AB', u'TariffRemark': u'tid-biljett'}, u'ArrivalDate': u'12.07.14', u'MT6MessagesExist': u'0', u'Destination': {u'#text': u'Flemingsberg', u'@x': u'17947206', u'@sa': u'200105171', u'@y': u'59219047'}, u'RemarksExist': u'0', u'RTUMessagesExist': u'1', u'DepartureDate': u'12.07.14', u'ArrivalTime': {u'#text': u'10:05', u'@type': u'EXACT'}, u'Duration': u'0:38', u'SubTrips': u'1', u'Changes': u'0'}}, {u'SubTrip': {u'Origin': {u'#text': u'Sollentuna', u'@x': u'17948833', u'@sa': u'200105061', u'@y': u'59428019'}, u'DepartureTime': {u'#text': u'09:57', u'@type': u'EXACT'}, u'IntermediateStopsQuery': u'https://api.trafiklab.se/sl/reseplanerare/intermediate/le.01426453.1405147882/1/C0-0:0C0-1:0.json', u'ArrivalDate': u'12.07.14', u'Destination': {u'#text': u'Flemingsberg', u'@x': u'17947206', u'@sa': u'200105171', u'@y': u'59219047'}, u'DepartureDate': u'12.07.14', u'ArrivalTime': {u'#text': u'10:35', u'@type': u'EXACT'}, u'RTUMessages': {u'RTUMessage': u'Kommande h\xe4ndelse: Pendelt\xe5gen stannar inte i Solna, Ulriksdal och Helenelund sena kv\xe4llar och n\xe4tter 25 juli - 3 augusti pga underh\xe5llsarbete. L\xe4s mer under Aktuellt p\xe5 sl.se'}, u'Transport': {u'Line': u'36', u'Towards': u'S\xf6dert\xe4lje C', u'Type': u'TRN', u'Name': u'pendelt\xe5g 36'}}, u'Summary': {u'Origin': {u'#text': u'Sollentuna', u'@x': u'17948833', u'@sa': u'200105061', u'@y': u'59428019'}, u'DepartureTime': {u'#text': u'09:57', u'@type': u'EXACT'}, u'CO2': u'0,0', u'PriceInfo': {u'TariffZones': u'AB', u'TariffRemark': u'tid-biljett'}, u'ArrivalDate': u'12.07.14', u'MT6MessagesExist': u'0', u'Destination': {u'#text': u'Flemingsberg', u'@x': u'17947206', u'@sa': u'200105171', u'@y': u'59219047'}, u'RemarksExist': u'0', u'RTUMessagesExist': u'1', u'DepartureDate': u'12.07.14', u'ArrivalTime': {u'#text': u'10:35', u'@type': u'EXACT'}, u'Duration': u'0:38', u'SubTrips': u'1', u'Changes': u'0'}}, {u'SubTrip': {u'Origin': {u'#text': u'Sollentuna', u'@x': u'17948833', u'@sa': u'200105061', u'@y': u'59428019'}, u'DepartureTime': {u'#text': u'10:27', u'@type': u'EXACT'}, u'IntermediateStopsQuery': u'https://api.trafiklab.se/sl/reseplanerare/intermediate/le.01426453.1405147882/1/C0-0:0C0-1:0C0-2:0.json', u'ArrivalDate': u'12.07.14', u'Destination': {u'#text': u'Flemingsberg', u'@x': u'17947206', u'@sa': u'200105171', u'@y': u'59219047'}, u'DepartureDate': u'12.07.14', u'ArrivalTime': {u'#text': u'11:05', u'@type': u'EXACT'}, u'RTUMessages': {u'RTUMessage': u'Kommande h\xe4ndelse: Pendelt\xe5gen stannar inte i Solna, Ulriksdal och Helenelund sena kv\xe4llar och n\xe4tter 25 juli - 3 augusti pga underh\xe5llsarbete. L\xe4s mer under Aktuellt p\xe5 sl.se'}, u'Transport': {u'Line': u'36', u'Towards': u'S\xf6dert\xe4lje C', u'Type': u'TRN', u'Name': u'pendelt\xe5g 36'}}, u'Summary': {u'Origin': {u'#text': u'Sollentuna', u'@x': u'17948833', u'@sa': u'200105061', u'@y': u'59428019'}, u'DepartureTime': {u'#text': u'10:27', u'@type': u'EXACT'}, u'CO2': u'0,0', u'PriceInfo': {u'TariffZones': u'AB', u'TariffRemark': u'tid-biljett'}, u'ArrivalDate': u'12.07.14', u'MT6MessagesExist': u'0', u'Destination': {u'#text': u'Flemingsberg', u'@x': u'17947206', u'@sa': u'200105171', u'@y': u'59219047'}, u'RemarksExist': u'0', u'RTUMessagesExist': u'1', u'DepartureDate': u'12.07.14', u'ArrivalTime': {u'#text': u'11:05', u'@type': u'EXACT'}, u'Duration': u'0:38', u'SubTrips': u'1', u'Changes': u'0'}}, {u'SubTrip': {u'Origin': {u'#text': u'Sollentuna', u'@x': u'17948833', u'@sa': u'200105061', u'@y': u'59428019'}, u'DepartureTime': {u'#text': u'10:57', u'@type': u'EXACT'}, u'IntermediateStopsQuery': u'https://api.trafiklab.se/sl/reseplanerare/intermediate/le.01426453.1405147882/1/C0-0:0C0-1:0C0-2:0C0-3:0.json', u'ArrivalDate': u'12.07.14', u'Destination': {u'#text': u'Flemingsberg', u'@x': u'17947206', u'@sa': u'200105171', u'@y': u'59219047'}, u'DepartureDate': u'12.07.14', u'ArrivalTime': {u'#text': u'11:35', u'@type': u'EXACT'}, u'RTUMessages': {u'RTUMessage': u'Kommande h\xe4ndelse: Pendelt\xe5gen stannar inte i Solna, Ulriksdal och Helenelund sena kv\xe4llar och n\xe4tter 25 juli - 3 augusti pga underh\xe5llsarbete. L\xe4s mer under Aktuellt p\xe5 sl.se'}, u'Transport': {u'Line': u'36', u'Towards': u'S\xf6dert\xe4lje C', u'Type': u'TRN', u'Name': u'pendelt\xe5g 36'}}, u'Summary': {u'Origin': {u'#text': u'Sollentuna', u'@x': u'17948833', u'@sa': u'200105061', u'@y': u'59428019'}, u'DepartureTime': {u'#text': u'10:57', u'@type': u'EXACT'}, u'CO2': u'0,0', u'PriceInfo': {u'TariffZones': u'AB', u'TariffRemark': u'tid-biljett'}, u'ArrivalDate': u'12.07.14', u'MT6MessagesExist': u'0', u'Destination': {u'#text': u'Flemingsberg', u'@x': u'17947206', u'@sa': u'200105171', u'@y': u'59219047'}, u'RemarksExist': u'0', u'RTUMessagesExist': u'1', u'DepartureDate': u'12.07.14', u'ArrivalTime': {u'#text': u'11:35', u'@type': u'EXACT'}, u'Duration': u'0:38', u'SubTrips': u'1', u'Changes': u'0'}}, {u'SubTrip': {u'Origin': {u'#text': u'Sollentuna', u'@x': u'17948833', u'@sa': u'200105061', u'@y': u'59428019'}, u'DepartureTime': {u'#text': u'11:27', u'@type': u'EXACT'}, u'IntermediateStopsQuery': u'https://api.trafiklab.se/sl/reseplanerare/intermediate/le.01426453.1405147882/1/C0-0:0C0-1:0C0-2:0C0-3:0C0-4:0.json', u'ArrivalDate': u'12.07.14', u'Destination': {u'#text': u'Flemingsberg', u'@x': u'17947206', u'@sa': u'200105171', u'@y': u'59219047'}, u'DepartureDate': u'12.07.14', u'ArrivalTime': {u'#text': u'12:05', u'@type': u'EXACT'}, u'RTUMessages': {u'RTUMessage': u'Kommande h\xe4ndelse: Pendelt\xe5gen stannar inte i Solna, Ulriksdal och Helenelund sena kv\xe4llar och n\xe4tter 25 juli - 3 augusti pga underh\xe5llsarbete. L\xe4s mer under Aktuellt p\xe5 sl.se'}, u'Transport': {u'Line': u'36', u'Towards': u'S\xf6dert\xe4lje C', u'Type': u'TRN', u'Name': u'pendelt\xe5g 36'}}, u'Summary': {u'Origin': {u'#text': u'Sollentuna', u'@x': u'17948833', u'@sa': u'200105061', u'@y': u'59428019'}, u'DepartureTime': {u'#text': u'11:27', u'@type': u'EXACT'}, u'CO2': u'0,0', u'PriceInfo': {u'TariffZones': u'AB', u'TariffRemark': u'tid-biljett'}, u'ArrivalDate': u'12.07.14', u'MT6MessagesExist': u'0', u'Destination': {u'#text': u'Flemingsberg', u'@x': u'17947206', u'@sa': u'200105171', u'@y': u'59219047'}, u'RemarksExist': u'0', u'RTUMessagesExist': u'1', u'DepartureDate': u'12.07.14', u'ArrivalTime': {u'#text': u'12:05', u'@type': u'EXACT'}, u'Duration': u'0:38', u'SubTrips': u'1', u'Changes': u'0'}}], u'Trips': u'5', u'Queries': {u'PrevQuery': u'https://api.trafiklab.se/sl/reseplanerare/prev/le.01426453.1405147882/1.json', u'NextQuery': u'https://api.trafiklab.se/sl/reseplanerare/next/le.01426453.1405147882/1.json', u'CurrentQuery': u'https://api.trafiklab.se/sl/reseplanerare/current/le.01426453.1405147882/1.json'}}}
+$ ./keyreader.py platsuppslag | xargs -I % ./platsuppslag.py % vårsta
+{"ResponseData": [{"X": "17797365", "Type": "Station", "Y": "59165265", "Name": "V\u00e5rsta centrum (Botkyrka)", "SiteId": "7305"}, {"X": "17858123", "Type": "Station", "Y": "59626106", "Name": "M\u00e4rsta v\u00e5rdcentral (Sigtuna)", "SiteId": "5018"}, {"X": "17887931", "Type": "Station", "Y": "59273603", "Name": "V\u00e5rberg (Stockholm)", "SiteId": "9286"}, {"X": "17886520", "Type": "Station", "Y": "59263517", "Name": "V\u00e5rby g\u00e5rd (Huddinge)", "SiteId": "9285"}, {"X": "17797365", "Type": "Station", "Y": "59165265", "Name": "V\u00c5RC", "SiteId": "7305"}, {"X": "17954820", "Type": "Station", "Y": "59224872", "Name": "V\u00c5RK", "SiteId": "7015"}, {"X": "17886592", "Type": "Station", "Y": "59275868", "Name": "V\u00e5rbergs centrum (Stockholm)", "SiteId": "1796"}, {"X": "17421571", "Type": "Station", "Y": "59216440", "Name": "V\u00e5rtala (Nykvarn)", "SiteId": "7734"}, {"X": "18471763", "Type": "Station", "Y": "59424298", "Name": "V\u00e5rholma (V\u00e4rmd\u00f6)", "SiteId": "143"}, {"X": "18483071", "Type": "Station", "Y": "59423345", "Name": "V\u00e5rlunda (V\u00e4rmd\u00f6)", "SiteId": "144"}], "Message": null, "StatusCode": 0, "ExecutionTime": 0}
 ```
 där
-* **9506** är ID:t för Sollentuna
-* **%** är en placeholder för en API-nyckel som **keyreader.py** spottar ut
-* **9:15** är tidpunkten för avgång
-* **9526** är ID:t för Flemingsberg
+* `%` är en placeholder för en API-nyckel som **keyreader.py** spottar ut
+* `vårsta` är söksträngen som Platsuppslag identifierar som "Vårsta centrum (Botkyrka)"
+
+## Exempel: reseplanerare2-trip.py
+```bash
+$ ./keyreader.py reseplanerare2 | xargs -I % ./reseplanerare2-trip.py % 9506 9526 '9:15'
+{"TripList": {"Trip": [{"co2": "0.00", "dur": "38", "chg": "0", "PriceInfo": {"TariffRemark": {"$": "3 biljett"}, "TariffZones": {"$": "AB"}}, "LegList": {"Leg": {"Origin": {"routeIdx": "6", "date": "2016-04-20", "id": "400105061", "time": "09:27", "lat": "59.428019", "lon": "17.948833", "name": "Sollentuna", "type": "ST"}, "dir": "S\u00f6dert\u00e4lje C", "name": "pendelt\u00e5g 36", "JourneyDetailRef": {"ref": "ref%3D376593%2F133285%2F543308%2F146123%2F74%3Fdate%3D2016-04-20%26station_evaId%3D400105061%26station_type%3Ddep%26lang%3Dsv%26format%3Djson%26"}, "idx": "0", "line": "36", "type": "TRAIN", "Destination": {"routeIdx": "17", "date": "2016-04-20", "id": "400105171", "time": "10:05", "lat": "59.219047", "lon": "17.947206", "name": "Flemingsberg", "type": "ST"}, "GeometryRef": {"ref": "ref%3D376593%2F133285%2F543308%2F146123%2F74%26startIdx%3D6%26endIdx%3D17%26lang%3Dsv%26format%3Djson%26"}}}}, {"co2": "0.00", "dur": "38", "chg": "0", "PriceInfo": {"TariffRemark": {"$": "3 biljett"}, "TariffZones": {"$": "AB"}}, "LegList": {"Leg": {"Origin": {"routeIdx": "6", "date": "2016-04-20", "id": "400105061", "time": "09:42", "lat": "59.428019", "lon": "17.948833", "name": "Sollentuna", "type": "ST"}, "dir": "S\u00f6dert\u00e4lje C", "name": "pendelt\u00e5g 36", "JourneyDetailRef": {"ref": "ref%3D943599%2F322311%2F944690%2F157813%2F74%3Fdate%3D2016-04-20%26station_evaId%3D400105061%26station_type%3Ddep%26lang%3Dsv%26format%3Djson%26"}, "idx": "0", "line": "36", "type": "TRAIN", "Destination": {"routeIdx": "17", "date": "2016-04-20", "id": "400105171", "time": "10:20", "lat": "59.219047", "lon": "17.947206", "name": "Flemingsberg", "type": "ST"}, "GeometryRef": {"ref": "ref%3D943599%2F322311%2F944690%2F157813%2F74%26startIdx%3D6%26endIdx%3D17%26lang%3Dsv%26format%3Djson%26"}}}}, {"co2": "0.00", "dur": "38", "chg": "0", "PriceInfo": {"TariffRemark": {"$": "3 biljett"}, "TariffZones": {"$": "AB"}}, "LegList": {"Leg": {"Origin": {"routeIdx": "6", "date": "2016-04-20", "id": "400105061", "time": "09:57", "lat": "59.428019", "lon": "17.948833", "name": "Sollentuna", "type": "ST"}, "dir": "S\u00f6dert\u00e4lje C", "name": "pendelt\u00e5g 36", "JourneyDetailRef": {"ref": "ref%3D975198%2F332820%2F697512%2F23691%2F74%3Fdate%3D2016-04-20%26station_evaId%3D400105061%26station_type%3Ddep%26lang%3Dsv%26format%3Djson%26"}, "idx": "0", "line": "36", "type": "TRAIN", "Destination": {"routeIdx": "17", "date": "2016-04-20", "id": "400105171", "time": "10:35", "lat": "59.219047", "lon": "17.947206", "name": "Flemingsberg", "type": "ST"}, "GeometryRef": {"ref": "ref%3D975198%2F332820%2F697512%2F23691%2F74%26startIdx%3D6%26endIdx%3D17%26lang%3Dsv%26format%3Djson%26"}}}}, {"co2": "0.00", "dur": "38", "chg": "0", "PriceInfo": {"TariffRemark": {"$": "3 biljett"}, "TariffZones": {"$": "AB"}}, "LegList": {"Leg": {"Origin": {"routeIdx": "6", "date": "2016-04-20", "id": "400105061", "time": "10:12", "lat": "59.428019", "lon": "17.948833", "name": "Sollentuna", "type": "ST"}, "dir": "S\u00f6dert\u00e4lje C", "name": "pendelt\u00e5g 36", "JourneyDetailRef": {"ref": "ref%3D605097%2F209477%2F625428%2F111017%2F74%3Fdate%3D2016-04-20%26station_evaId%3D400105061%26station_type%3Ddep%26lang%3Dsv%26format%3Djson%26"}, "idx": "0", "line": "36", "type": "TRAIN", "Destination": {"routeIdx": "17", "date": "2016-04-20", "id": "400105171", "time": "10:50", "lat": "59.219047", "lon": "17.947206", "name": "Flemingsberg", "type": "ST"}, "GeometryRef": {"ref": "ref%3D605097%2F209477%2F625428%2F111017%2F74%26startIdx%3D6%26endIdx%3D17%26lang%3Dsv%26format%3Djson%26"}}}}, {"co2": "0.00", "dur": "38", "chg": "0", "PriceInfo": {"TariffRemark": {"$": "3 biljett"}, "TariffZones": {"$": "AB"}}, "LegList": {"Leg": {"Origin": {"routeIdx": "6", "date": "2016-04-20", "id": "400105061", "time": "10:27", "lat": "59.428019", "lon": "17.948833", "name": "Sollentuna", "type": "ST"}, "dir": "S\u00f6dert\u00e4lje C", "name": "pendelt\u00e5g 36", "JourneyDetailRef": {"ref": "ref%3D2337%2F8610%2F538500%2F268471%2F74%3Fdate%3D2016-04-20%26station_evaId%3D400105061%26station_type%3Ddep%26lang%3Dsv%26format%3Djson%26"}, "idx": "0", "line": "36", "type": "TRAIN", "Destination": {"routeIdx": "17", "date": "2016-04-20", "id": "400105171", "time": "11:05", "lat": "59.219047", "lon": "17.947206", "name": "Flemingsberg", "type": "ST"}, "GeometryRef": {"ref": "ref%3D2337%2F8610%2F538500%2F268471%2F74%26startIdx%3D6%26endIdx%3D17%26lang%3Dsv%26format%3Djson%26"}}}}], "noNamespaceSchemaLocation": "hafasRestTrip.xsd"}}
+```
+där
+* `9506` är ID:t för Sollentuna (avgångspunkten)
+* `9526` är ID:t för Flemingsberg (destinationen)
+* `'9:15'` är tidpunkten för avgång
+
+## Exempel: reseplanerare2-journeydetails.py
+```bash
+$ ./keyreader.py reseplanerare2 | xargs -I % ./reseplanerare2-journeydetail.py % '970356/328288/925322/139225/74?date=2016-04-20&station_evaId=400101051&station_type=dep&lang=sv&format=json&'
+{"JourneyDetail": {"GeometryRef": {"ref": "ref%3D169662%2F61390%2F252364%2F69644%2F74%26lang%3Dsv%26format%3Djson%26"}, "Types": {"Type": {"routeIdxFrom": "0", "$": "METRO", "routeIdxTo": "18"}}, "Directions": {"Direction": {"routeIdxFrom": "0", "$": "M\u00f6rby centrum", "routeIdxTo": "18"}}, "RTUMessages": {"RTUMessage": [{"$": "Tv\u00e5 hissar \u00e4r avst\u00e4ngda vid Danderyds sjukhus p.g.a. underh\u00e5llsarbeten."}, {"$": "Hissen till och fr\u00e5n plattformen vid Hornstull, fungerar inte."}]}, "Stops": {"Stop": [{"depTime": "08:39", "id": "400102851", "name": "Fru\u00e4ngen", "lon": "17.964843", "lat": "59.286754", "routeIdx": "0", "depDate": "2016-04-20"}, {"depTime": "08:40", "arrTime": "08:40", "id": "400102841", "name": "V\u00e4stertorp", "lon": "17.966704", "arrDate": "2016-04-20", "lat": "59.291347", "routeIdx": "1", "depDate": "2016-04-20"}, {"depTime": "08:42", "arrTime": "08:42", "id": "400102831", "name": "H\u00e4gerstens\u00e5sen", "lon": "17.978426", "arrDate": "2016-04-20", "lat": "59.295159", "routeIdx": "2", "depDate": "2016-04-20"}, {"depTime": "08:44", "arrTime": "08:44", "id": "400102821", "name": "Telefonplan", "lon": "17.997321", "arrDate": "2016-04-20", "lat": "59.298251", "routeIdx": "3", "depDate": "2016-04-20"}, {"depTime": "08:46", "arrTime": "08:46", "id": "400102811", "name": "Midsommarkransen", "lon": "18.011965", "arrDate": "2016-04-20", "lat": "59.301865", "routeIdx": "4", "depDate": "2016-04-20"}, {"depTime": "08:48", "arrTime": "08:48", "id": "400102603", "name": "Liljeholmen", "lon": "18.023093", "arrDate": "2016-04-20", "lat": "59.310710", "routeIdx": "5", "depDate": "2016-04-20"}, {"depTime": "08:50", "arrTime": "08:50", "id": "400102531", "name": "Hornstull", "lon": "18.035543", "arrDate": "2016-04-20", "lat": "59.315960", "routeIdx": "6", "depDate": "2016-04-20"}, {"depTime": "08:51", "arrTime": "08:51", "id": "400102521", "name": "Zinkensdamm", "lon": "18.049692", "arrDate": "2016-04-20", "lat": "59.317704", "routeIdx": "7", "depDate": "2016-04-20"}, {"depTime": "08:52", "arrTime": "08:52", "id": "400102511", "name": "Mariatorget", "lon": "18.062115", "arrDate": "2016-04-20", "lat": "59.317012", "routeIdx": "8", "depDate": "2016-04-20"}, {"depTime": "08:55", "arrTime": "08:55", "id": "400102011", "name": "Slussen", "lon": "18.071491", "arrDate": "2016-04-20", "lat": "59.319511", "routeIdx": "9", "depDate": "2016-04-20"}, {"depTime": "08:56", "arrTime": "08:56", "id": "400102021", "name": "Gamla stan", "lon": "18.067167", "arrDate": "2016-04-20", "lat": "59.323187", "routeIdx": "10", "depDate": "2016-04-20"}, {"depTime": "08:59", "arrTime": "08:59", "id": "400101051", "name": "T-Centralen", "lon": "18.061486", "arrDate": "2016-04-20", "lat": "59.331358", "routeIdx": "11", "depDate": "2016-04-20"}, {"depTime": "09:02", "arrTime": "09:02", "id": "400102101", "name": "\u00d6stermalmstorg", "lon": "18.076381", "arrDate": "2016-04-20", "lat": "59.334972", "routeIdx": "12", "depDate": "2016-04-20"}, {"depTime": "09:03", "arrTime": "09:03", "id": "400102211", "name": "Stadion", "lon": "18.081946", "arrDate": "2016-04-20", "lat": "59.340806", "routeIdx": "13", "depDate": "2016-04-20"}, {"depTime": "09:05", "arrTime": "09:05", "id": "400102221", "name": "Tekniska h\u00f6gskolan", "lon": "18.069316", "arrDate": "2016-04-20", "lat": "59.346541", "routeIdx": "14", "depDate": "2016-04-20"}, {"depTime": "09:08", "arrTime": "09:08", "id": "400102231", "name": "Universitetet (Tunnelbanan)", "lon": "18.054897", "arrDate": "2016-04-20", "lat": "59.365365", "routeIdx": "15", "depDate": "2016-04-20"}, {"depTime": "09:10", "arrTime": "09:10", "id": "400102241", "name": "Bergshamra", "lon": "18.037485", "arrDate": "2016-04-20", "lat": "59.380736", "routeIdx": "16", "depDate": "2016-04-20"}, {"depTime": "09:12", "arrTime": "09:12", "id": "400102251", "name": "Danderyds sjukhus", "lon": "18.041755", "arrDate": "2016-04-20", "lat": "59.390507", "routeIdx": "17", "depDate": "2016-04-20"}, {"arrTime": "09:14", "id": "400102301", "name": "M\u00f6rby centrum", "lon": "18.036424", "arrDate": "2016-04-20", "lat": "59.398319", "routeIdx": "18"}]}, "Names": {"Name": {"routeIdxFrom": "0", "$": "tunnelbanans r\u00f6da linje 14", "routeIdxTo": "18"}}, "noNamespaceSchemaLocation": "hafasRestJourneyDetail.xsd", "Lines": {"Line": {"routeIdxFrom": "0", "$": "14", "routeIdxTo": "18"}}}}
+```
+där
+* `'970356/...` är en referensparameter (del av en URL)
 
