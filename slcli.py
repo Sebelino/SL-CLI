@@ -36,7 +36,12 @@ def travel(origin,destination,time):
             refvalue = unquote(st['JourneyDetailRef']['ref'][6:])
             sstsresponse = japi.request({'key': apikeys['reseplanerare2'],
                                          'ref': refvalue})
-            stops = sstsresponse['JourneyDetail']['Stops']['Stop'][1:]
+            allstops = sstsresponse['JourneyDetail']['Stops']['Stop']
+            oid = st['Origin']['id']
+            did = st['Destination']['id']
+            sameid = [s['id'] in {oid, did} for s in allstops]
+            (oindex, dindex) = [i for i, e in enumerate(sameid) if e]
+            stops = allstops[oindex+1:dindex]
             subsubtrips = [{'arrivalTime': s['arrTime'], 'destination':
                             s['name']} for s in stops]
         else:
