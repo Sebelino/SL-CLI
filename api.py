@@ -36,11 +36,17 @@ def cli(api):
     """ Enables the user to specify command-line arguments. """
     parser = argparse.ArgumentParser()
     interface = api.interface()
-    for (a, b) in interface.items():
-        optionalprefix = '' if b['required'] else '--'
-        parser.add_argument('{}{}'.format(optionalprefix, a),
-                            default=b['default'] if 'default' in b else '',
-                            help=b['description'])
+    positions = [(interface[k]['position'], k) for k in interface
+                 if 'position' in interface[k]]
+    positions.sort(key=lambda pair: pair[0])
+    fields = [k for (n, k) in positions]
+    for k in fields:
+        props = interface[k]
+        optionalprefix = '' if props['required'] else '--'
+        parser.add_argument('{}{}'.format(optionalprefix, k),
+                            default=props['default']
+                            if 'default' in props else '',
+                            help=props['description'])
     args = parser.parse_args()
     argdict = vars(args)
     argdict = dict([(arg, val) for arg, val in argdict.items() if 'default' not
