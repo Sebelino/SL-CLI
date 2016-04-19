@@ -55,7 +55,6 @@ $ ./slcli.py vårsta "tekniska högskolan" 8:00
 
 # API-moduler
 Utöver det användarvänliga **slcli.py** finns det några wrapper-moduler för API:erna SL Platsuppslag och SL Reseplanerare 2. CLI-argumenten till dessa är samma som de faktiska query-parametrarna; se **--help** för en beskrivning. Output är JSON.
-./keyreader.py platsuppslag | xargs -I % ./platsuppslag.py % vårsta
 
 ## Exempel: platsuppslag.py
 ```bash
@@ -64,7 +63,7 @@ $ ./keyreader.py platsuppslag | xargs -I % ./platsuppslag.py % vårsta
 ```
 där
 * `%` är en placeholder för en API-nyckel som **keyreader.py** spottar ut
-* `vårsta` är söksträngen som Platsuppslag identifierar som "Vårsta centrum (Botkyrka)"
+* `vårsta` är söksträngen som *Platsuppslag* identifierar som "Vårsta centrum (Botkyrka)"
 
 ## Exempel: reseplanerare2-trip.py
 ```bash
