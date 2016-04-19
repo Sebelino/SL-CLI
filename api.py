@@ -3,7 +3,7 @@
 
 import argparse
 import sys
-import urllib
+import urllib.parse
 import json
 import xmltodict
 import logging
@@ -39,7 +39,9 @@ def cli(api):
     positions = [(interface[k]['position'], k) for k in interface
                  if 'position' in interface[k]]
     positions.sort(key=lambda pair: pair[0])
-    fields = [k for (n, k) in positions]
+    unpositioned = [k for k in interface if interface[k]['required']
+                    and k not in {f for (_, f) in positions}]
+    fields = [k for (n, k) in positions]+unpositioned
     for k in fields:
         props = interface[k]
         optionalprefix = '' if props['required'] else '--'
