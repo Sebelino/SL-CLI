@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import logging
 
 from reseplanerare2 import tripapi, journeydetailapi as japi
 from platsuppslag import api as papi
@@ -92,6 +93,10 @@ if __name__ == '__main__':
     parser.add_argument('origin', metavar='from', help="Varifrån ska du resa?")
     parser.add_argument('to', help="Vart ska du?")
     parser.add_argument('at', help="När ska du bege dig?")
+    parser.add_argument('--verbose', '-v', action='store_true',
+                        help="Skriv ut debuggutskrifter")
     args = parser.parse_args()
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
     results = travel(args.origin, args.to, args.at)
     printtrip(results)

@@ -6,12 +6,13 @@ import sys
 import urllib
 import json
 import xmltodict
+import logging
 
 
 def requestURL(url, retries=10):
     """ URL -> dict.
         :raises: Exception if the site could not be accessed """
-    print("Requesting URL: {}".format(url))
+    logging.debug("Requesting URL: {}".format(url))
     try:
         responsebytes = urllib.request.urlopen(url).read()
         response = responsebytes.decode('utf8')
