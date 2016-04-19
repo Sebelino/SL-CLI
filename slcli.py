@@ -3,6 +3,7 @@
 
 import argparse
 import logging
+from pprint import pformat
 from time import time
 
 from reseplanerare2 import tripapi, journeydetailapi as japi
@@ -104,6 +105,7 @@ if __name__ == '__main__':
         starttime = time()
     results = travel(args.origin, args.to, args.at)
     if args.verbose:
+        logging.debug(pformat(results))
         elapsedtime = time()-starttime
         logging.debug("Elapsed request time: {0:.2f} seconds"
                       .format(elapsedtime))
