@@ -4,7 +4,7 @@
 from pprint import pprint
 import re,argparse
 
-from reseplanerare import api as rapi
+from reseplanerare2 import tripapi, journeydetailapi as japi
 from platsuppslag import api as papi
 from api import requestURL,API
 from keyreader import read_keys
@@ -17,13 +17,6 @@ from collections import OrderedDict
     The origin and destination do not need to perfectly match the actual names in the API.
 """
 def travel(origin,destination,time):
-    slapi = API('http://xml.reseplanerare.sl.se:8080/bin/query.exe/sn',{
-        'ident' : {'required':True},
-        'seqnr' : {'required':True},
-        'L' : {'required':True},
-        'getIntermediateStops' : {'required':True},
-    })
-
     apikeys = read_keys()
 
     def sitedata(searchstring):
@@ -34,70 +27,49 @@ def travel(origin,destination,time):
     startpoint = sitedata(origin)
     endpoint = sitedata(destination)
 
-    rresponse = rapi.request({'key':apikeys['reseplanerare'],'s':startpoint['id'],'z':endpoint['id'],'time':time})
-    trips = rresponse['HafasResponse']['Trip']
-    toptrip = trips[0]
-    result = {
-        'Origin':startpoint['name'],
-        'Destination':endpoint['name'],
-        'DepartureTime':toptrip['Summary']['DepartureTime']['#text'],
-        'DepartureDate':toptrip['Summary']['DepartureDate'],
-        'trip' : [],
-    }
-    if isinstance(toptrip['SubTrip'],dict):
-        toptrip['SubTrip'] = [toptrip['SubTrip']]
-    for subtrip in toptrip['SubTrip']:
+    rresponse = tripapi.request({'key':apikeys['reseplanerare2'],'originId':startpoint['id'],'destId':endpoint['id'],'time':time})
+    trips = rresponse['TripList']['Trip']
+    toptrip = trips[0]['LegList']['Leg']
+    subtrips = []
+    for st in toptrip:
+        #sstsresponse = japi.request({'key': apikeys['reseplanerare2'],
+        #                             'ref': st['JourneyDetailRef']['ref']})
+        subsubtrips = []
         st = {
-            'Origin':subtrip['Origin']['#text'],
-            'Destination':subtrip['Destination']['#text'],
-            'DepartureTime':subtrip['DepartureTime']['#text'],
-            'DepartureDate':subtrip['DepartureDate'],
-            'ArrivalTime':subtrip['ArrivalTime']['#text'],
-            'ArrivalDate':subtrip['ArrivalDate'],
-            'trip':[],
+            'departureTime':st['Origin']['time'],
+            'origin':st['Origin']['name'],
+            'trip':subsubtrips,
+            'arrivalTime':st['Destination']['time'],
+            'destination':st['Destination']['name'],
         }
-        intermediateurl = subtrip['IntermediateStopsQuery']
-
-        """ Rad 1 nedanför konformerar till dokumentationen; rad 2 konformerar till det faktiska beteendet. """
-        #matchings = re.search(r'intermediate/([^/]*)/([^/]*)/([^.]*).json',intermediateurl,re.I|re.U)
-        matchings = re.search(r'intermediate/([^/]*)/([^/]*)/[^/]*(C[^.]*).json',intermediateurl,re.I|re.U)
-
-        (a,b,c) = [matchings.group(i) for i in (1,2,3)]
-        resp = slapi.request({'ident':a,'seqnr':b,'L':'vs_xml','getIntermediateStops':c})
-        indices = ['Name','ArrivalDate','ArrivalTime','DepartureDate','DepartureTime']
-        subsubtrips = resp['HafasResponse']['IntermediateStops']['IntermediateStop']
-        if isinstance(subsubtrips,OrderedDict):
-            subsubtrips = [subsubtrips]
-        for subsubtrip in subsubtrips:
-            insertion = dict()
-            for i in indices:
-                if isinstance(subsubtrip[i],basestring):
-                    insertion[i] = subsubtrip[i]
-                else:
-                    insertion[i] = subsubtrip[i]['#text']
-            st['trip'].append(insertion)
-        result['trip'].append(st)
+        subtrips.append(st)
+    result = {
+        'departureDate': toptrip[0]['Origin']['date'],
+        'departureTime': toptrip[0]['Origin']['time'],
+        'origin':startpoint['name'],
+        'destination':endpoint['name'],
+        'trip' : subtrips,
+    }
     return result
+
 
 """ Pretty-printing.
 """
 def printtrip(trip):
-    header = "%s %s %s - %s"% (trip['DepartureTime'],trip['DepartureDate'],trip['Origin'],trip['Destination'])
-    print header.encode('cp1252')
-    maxlength = 0
+    header = "%s %s %s - %s:"% (trip['departureTime'],trip['departureDate'],trip['origin'],trip['destination'])
+    print(header)
     for subtrip in trip['trip']:
+        originstr = u'{}....{}'.format(subtrip['departureTime'],
+                                      subtrip['origin'])
+        print(originstr)
         for subsubtrip in subtrip['trip']:
-            maxlength = max(maxlength,len(subsubtrip['Name']))
-    for subtrip in trip['trip']:
-        print "%s....%s"% (subtrip['DepartureTime'],subtrip['Origin'])
-        for subsubtrip in subtrip['trip']:
-            n = subsubtrip['Name']+' '*(maxlength-len(subsubtrip['Name']))
-            dt = subsubtrip['DepartureTime']
-            dd = subsubtrip['DepartureDate']
-            at = subsubtrip['ArrivalTime']
-            ad = subsubtrip['ArrivalDate']
-            print "%s........%s"% (dt,n)
-        print "%s....%s"% (subtrip['ArrivalTime'],subtrip['Destination'])
+            t = subsubtrip['arrivalTime']
+            d = subsubtrip['destination']
+            intermediatestr = t+u'.'*8+d
+            print(intermediatestr)
+        destinationstr = u'{}....{}'.format(subtrip['arrivalTime'],
+                                           subtrip['destination'])
+        print(destinationstr)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -107,4 +79,3 @@ if __name__ == '__main__':
     args = parser.parse_args()
     results = travel(args.origin,args.to,args.at)
     printtrip(results)
-
