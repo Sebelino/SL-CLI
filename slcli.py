@@ -6,7 +6,7 @@ import re,argparse
 
 from reseplanerare2 import tripapi, journeydetailapi as japi
 from platsuppslag import api as papi
-from api import requestURL,API
+from api import requestURL, API, unquote
 from keyreader import read_keys
 from collections import OrderedDict
 
@@ -32,15 +32,21 @@ def travel(origin,destination,time):
     toptrip = trips[0]['LegList']['Leg']
     subtrips = []
     for st in toptrip:
-        #sstsresponse = japi.request({'key': apikeys['reseplanerare2'],
-        #                             'ref': st['JourneyDetailRef']['ref']})
-        subsubtrips = []
+        if 'JourneyDetailRef' in st:
+            refvalue = unquote(st['JourneyDetailRef']['ref'][6:])
+            sstsresponse = japi.request({'key': apikeys['reseplanerare2'],
+                                         'ref': refvalue})
+            stops = sstsresponse['JourneyDetail']['Stops']['Stop'][1:]
+            subsubtrips = [{'arrivalTime': s['arrTime'], 'destination':
+                            s['name']} for s in stops]
+        else:
+            subsubtrips = []
         st = {
-            'departureTime':st['Origin']['time'],
-            'origin':st['Origin']['name'],
-            'trip':subsubtrips,
-            'arrivalTime':st['Destination']['time'],
-            'destination':st['Destination']['name'],
+            'departureTime': st['Origin']['time'],
+            'origin': st['Origin']['name'],
+            'trip': subsubtrips,
+            'arrivalTime': st['Destination']['time'],
+            'destination': st['Destination']['name'],
         }
         subtrips.append(st)
     result = {

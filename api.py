@@ -15,12 +15,14 @@ def requestURL(url,retries=10):
         return requestURL(url,retries-1)
         raise Exception("Kunde inte öppna URL. Felaktig URL, eller så är din internetuppkoppling nere.")
         return None
-    if 'journeydetail' in url: import pdb; pdb.set_trace()  # XXX BREAKPOINT
     try:
         dictresponse = json.loads(response)
     except ValueError:
         dictresponse = xmltodict.parse(response)
     return dictresponse
+
+def unquote(ustr):
+    return urllib2.unquote(ustr.decode('utf8'))
 
 """ Enables the user to specify command-line arguments. """
 def cli(api):
