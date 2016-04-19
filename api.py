@@ -10,7 +10,8 @@ from copy import deepcopy
 def requestURL(url,retries=10):
     print("Requesting URL: %s"% url)
     try:
-        response = urllib.request.urlopen(url).read().decode('iso-8859-1')
+        responsebytes = urllib.request.urlopen(url).read()
+        response = responsebytes.decode('utf8')
     except urllib.error.URLError:
         return requestURL(url,retries-1)
         raise Exception("Kunde inte öppna URL. Felaktig URL, eller så är din internetuppkoppling nere.")
