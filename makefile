@@ -1,2 +1,6 @@
+.PHONY: clean
+
 clean:
-	rm *.pyc
+	rm -f *.pyc
+	rm -rf __pycache__
+	rm -rf .ropeproject
