@@ -12,8 +12,8 @@ Stockholms Lokaltrafik - Command Line Interface.
 * [Python3](https://www.python.org/downloads/)
   * [xmltodict](https://github.com/martinblech/xmltodict)
 
-# slcli
-Med modulen **slcli.py** får reseinformation direkt i terminalen. Se manualen:
+# slcli.py
+Med modulen **slcli.py** får du reseinformation direkt i terminalen. Se manualen:
 ```bash
 $ python3 slcli.py -h
 usage: slcli.py [-h] [--verbose] from to at
