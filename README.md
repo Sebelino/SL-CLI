@@ -12,6 +12,13 @@ Stockholms Lokaltrafik - Command Line Interface.
 * [Python3](https://www.python.org/downloads/)
   * [xmltodict](https://github.com/martinblech/xmltodict)
 
+## Virtual environment
+```bash
+$ make venv
+$ source venv/bin/activate
+...
+```
+
 # slcli.py
 Med modulen **slcli.py** får du reseinformation direkt i terminalen. Se manualen:
 ```bash
