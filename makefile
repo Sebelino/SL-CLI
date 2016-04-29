@@ -10,7 +10,7 @@ venv/bin/activate: requirements.txt
 # Beware of circular dependency black magic:
 #requirements.txt: venv
 #	source venv/bin/activate && \
-#	pip freeze requirements.txt;
+#	pip freeze > requirements.txt;
 
 clean:
 	rm -f *.pyc
