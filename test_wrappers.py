@@ -14,12 +14,13 @@ class TestPlatsuppslag:
     def setup(self):
         pass
 
-    def test_tekniska_hogskolan(self):
-        response = self.api.request({'key': self.key,
-                                     'searchstring': 'teknisk'})
+    def lookup(self, sstring, expected):
+        response = self.api.request({'key': self.key, 'searchstring': sstring})
         returned = response['ResponseData'][0]['Name']
-        expected = "Tekniska högskolan (Stockholm)"
         assert_equals(returned, expected)
+
+    def test_tekniska_hogskolan(self):
+        self.lookup("teknisk", "Tekniska högskolan (Stockholm)")
 
     def teardown(self):
         pass
