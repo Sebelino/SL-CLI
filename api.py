@@ -62,11 +62,11 @@ def cli(api):
 class API:
     """ Any API associated with trafiklab.se. """
 
-    """
+    def __init__(self, baseurl, interface):
+        """
         :param baseurl: Entry point URL for the API
         :param interface: Properties of the query parameters
-    """
-    def __init__(self, baseurl, interface):
+        """
         self._baseurl = baseurl
         self._interface = interface
 
