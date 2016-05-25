@@ -1,5 +1,8 @@
 .PHONY: clean
 
+test:
+	@nosetests
+
 venv: venv/bin/activate
 
 venv/bin/activate: requirements.txt
