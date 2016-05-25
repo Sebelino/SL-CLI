@@ -1,7 +1,17 @@
-.PHONY: clean
+.PHONY: clean test coverage
+
+coverage:
+	@nosetests -vs --with-coverage \
+	               --cover-package=slcli \
+	               --cover-package=api \
+				   --cover-package=keyreader \
+				   --cover-package=platsuppslag \
+				   --cover-package=reseplanerare2 \
+				   --cover-package=reseplanerare2-journeydetail \
+				   --cover-package=reseplanerare2-trip
 
 test:
-	@nosetests
+	@nosetests -vs
 
 venv: venv/bin/activate
 
