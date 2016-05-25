@@ -4,6 +4,7 @@ SL-CLI
 Stockholms Lokaltrafik - Command Line Interface.
 
 [![Build Status](https://travis-ci.org/Sebelino/SL-CLI.png)](https://travis-ci.org/Sebelino/SL-CLI)
+[![Coverage Status](https://coveralls.io/repos/github/Sebelino/SL-CLI/badge.svg?branch=master)](https://coveralls.io/github/Sebelino/SL-CLI?branch=master)
 
 # Installation
 1. Skapa en kopia av **sensitive.example.xml** som du kallar **sensitive.xml**.
