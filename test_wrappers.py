@@ -22,5 +22,8 @@ class TestPlatsuppslag:
     def test_tekniska_hogskolan(self):
         self.lookup("teknisk", "Tekniska högskolan (Stockholm)")
 
+    def test_varsta(self):
+        self.lookup("vårsta", "Vårsta centrum (Botkyrka)")
+
     def teardown(self):
         pass
