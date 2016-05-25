@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from nose.tools import assert_equals
-from keyreader import read_keys
+from keyreader import get_keys
 from platsuppslag import api as pu_api
 
 
@@ -9,7 +9,7 @@ class TestPlatsuppslag:
     @classmethod
     def setup_class(cls):
         cls.api = pu_api
-        cls.key = read_keys()['platsuppslag']
+        cls.key = get_keys()['platsuppslag']
 
     def setup(self):
         pass
