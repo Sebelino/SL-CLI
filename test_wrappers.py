@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from nose.tools import assert_equals
+from nose.tools import assert_equal
 from keyreader import get_keys
 from platsuppslag import api as pu_api
 
@@ -11,19 +11,16 @@ class TestPlatsuppslag:
         cls.api = pu_api
         cls.key = get_keys()['platsuppslag']
 
-    def setup(self):
-        pass
+    def test_lookup(self):
+        params = {
+            "teknisk": "Tekniska högskolan (Stockholm)",
+            "vårsta": "Vårsta centrum (Botkyrka)",
+        }
+        for sstring in params:
+            expected = params[sstring]
+            d = {'key': self.key, 'searchstring': sstring}
+            response = self.api.request(d)
+            returned = response['ResponseData'][0]['Name']
+            yield assert_equal, returned, expected
 
-    def lookup(self, sstring, expected):
-        response = self.api.request({'key': self.key, 'searchstring': sstring})
-        returned = response['ResponseData'][0]['Name']
-        assert_equals(returned, expected)
 
-    def test_tekniska_hogskolan(self):
-        self.lookup("teknisk", "Tekniska högskolan (Stockholm)")
-
-    def test_varsta(self):
-        self.lookup("vårsta", "Vårsta centrum (Botkyrka)")
-
-    def teardown(self):
-        pass
