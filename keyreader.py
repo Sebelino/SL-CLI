@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 def get_keys():
     keys = dict()
     keys["platsuppslag"] = os.environ.get("PLATSUPPSLAG")
+    keys["reseplanerare2"] = os.environ.get("RESEPLANERARE")
     if all(k is None for k in keys.values()):
         return read_keys()
     else:
