@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 from nose.tools import assert_equal
-from keyreader import get_keys
-from platsuppslag import api as pu_api
-from reseplanerare2 import tripapi as trip_api
-from reseplanerare2 import journeydetailapi as jd_api
+from ..keyreader import get_keys
+from ..apis.platsuppslag import api as pu_api
+from ..apis.reseplanerare2 import tripapi as trip_api
+from ..apis.reseplanerare2 import journeydetailapi as jd_api
 
 
 class TestPlatsuppslag:

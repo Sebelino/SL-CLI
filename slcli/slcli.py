@@ -6,10 +6,10 @@ import logging
 from pprint import pformat
 from time import time
 
-from reseplanerare2 import tripapi, journeydetailapi as japi
-from platsuppslag import api as papi
-from api import unquote
-from keyreader import read_keys
+from .apis.reseplanerare2 import tripapi, journeydetailapi as japi
+from .apis.platsuppslag import api as papi
+from .apis.api import unquote
+from .keyreader import read_keys
 
 
 def travel(origin, destination, time):

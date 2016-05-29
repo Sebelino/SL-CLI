@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from api import API, cli
+from .api import API, cli
 
 tripapi = API(r'http://api.sl.se/api2/TravelplannerV2/trip.json', {
     'key': {'required': True, 'description': "Din API-nyckel.", 'position': 1},
