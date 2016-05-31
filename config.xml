@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+     Paths specifying where to look for an XML file containing the API keys
+     install tag: Path(s) where the installer will put the XML file
+     deploy tag: Path(s) used to find the XML file once the program is installed
+-->
+<root>
+    <setup os="posix">
+        <install>
+            <path>~$SUDO_USER/.config/sl-cli/sensitive.xml</path>
+        </install>
+        <deploy>
+            <path>~$USER/.config/sl-cli/sensitive.xml</path>
+        </deploy>
+    </setup>
+    <setup os="nt">
+        <path>%APPDATA%\sl-cli\sensitive.xml</path>
+    </setup>
+</root>
+
