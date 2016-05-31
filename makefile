@@ -29,3 +29,7 @@ clean:
 	rm -f *.pyc
 	rm -rf __pycache__
 	rm -rf .ropeproject
+	rm -rf build
+	rm -rf dist
+	rm -rf SLCLI.egg-info
+	rm -rf locations.xml
