@@ -9,7 +9,7 @@ from time import time
 from .apis.reseplanerare2 import tripapi, journeydetailapi as japi
 from .apis.platsuppslag import api as papi
 from .apis.api import unquote
-from .keyreader import read_keys
+from .keyreader import get_keys
 
 
 def travel(origin, destination, time):
@@ -21,7 +21,7 @@ def travel(origin, destination, time):
     The origin and destination do not need to perfectly match the actual names
     in the API.
     """
-    apikeys = read_keys()
+    apikeys = get_keys()
 
     def sitedata(searchstring):
         presponse = papi.request({'key': apikeys['platsuppslag'],
