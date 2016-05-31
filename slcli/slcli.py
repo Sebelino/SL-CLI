@@ -92,7 +92,8 @@ def printtrip(trip):
                                             subtrip['destination'])
         print(destinationstr)
 
-if __name__ == '__main__':
+
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('origin', metavar='from', help="Varifrån ska du resa?")
     parser.add_argument('to', help="Vart ska du?")
@@ -110,3 +111,6 @@ if __name__ == '__main__':
         logging.debug("Elapsed request time: {0:.2f} seconds"
                       .format(elapsedtime))
     printtrip(results)
+
+if __name__ == '__main__':
+    main()
