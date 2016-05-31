@@ -9,7 +9,8 @@ import xml.etree.ElementTree as ET
 from pkg_resources import resource_stream
 
 # XML file storing one or more paths to the XML file containing the API keys
-LOCATOR_FILE = resource_stream('slcli.resources', 'locations.xml')
+locations_filename = 'locations.xml'
+locations_file = resource_stream('slcli.resources', locations_filename)
 
 
 def get_keys():
@@ -25,22 +26,22 @@ def get_keys():
 
 def find_keys():
     """ Reads API keys from the XML files referenced in the param xml """
-    locator_xml = LOCATOR_FILE.read().decode('utf8')
-    root = ET.fromstring(locator_xml)
-    for child in root:
-        if child.tag == 'path':
-            try:
-                path = child.text
-                dirpath = os.path.dirname(LOCATOR_FILE.name)
-                fullpath = os.path.join(dirpath, path)
-                return read_keys(fullpath)
-            except OSError as e:
-                if e.errno == errno.ENOENT:
-                    continue
-                else:
-                    raise
-    exceptionfmt = 'None of the files referenced by {} were found.'
-    raise Exception(exceptionfmt.format(LOCATOR_FILE.name))
+    locations_xml = locations_file.read().decode('utf8')
+    root = ET.fromstring(locations_xml)
+    paths = [c.text for c in root if c.tag == 'path']
+    rpaths = [os.path.expanduser(os.path.expandvars(p)) for p in paths]
+    for rpath in rpaths:
+        try:
+            dirpath = os.path.dirname(locations_filename)
+            fullpath = os.path.join(dirpath, rpath)
+            return read_keys(fullpath)
+        except OSError as e:
+            if e.errno == errno.ENOENT:
+                continue
+            else:
+                raise
+    exceptionhdr = 'Could not find the API keys in any of these directories:\n'
+    raise Exception(exceptionhdr+'\n'.join(rpaths))
 
 
 def read_keys(path):
