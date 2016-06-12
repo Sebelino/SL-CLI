@@ -68,7 +68,7 @@ setup(
     data_files=data_files(paths["install"]),
     entry_points={
         'console_scripts': [
-            'slcli = slcli.slcli:main',
+            'sl-cli = slcli.slcli:main',
         ],
     },
     license=open('LICENSE').read(),
