@@ -3,13 +3,17 @@
 
 import argparse
 import logging
+import os
+import os.path
 from pprint import pformat
 from time import time
+from shutil import copyfile
 
 from .apis.reseplanerare2 import tripapi, journeydetailapi as japi
 from .apis.platsuppslag import api as papi
 from .apis.api import unquote
 from .keyreader import get_keys
+from .keyreader import KeysNotFoundError
 
 
 def travel(origin, destination, time):
@@ -93,6 +97,28 @@ def printtrip(trip):
         print(destinationstr)
 
 
+def check_keys_installed():
+    try:
+        get_keys()
+    except KeysNotFoundError as e:
+        print("Dina API-nycklar är inte installerade.")
+        srcpath = "./sensitive.xml"
+        print("Ange sökvägen till dina nycklar [{}]:".format(srcpath))
+        answer = input("> ")
+        if answer.strip():
+            srcpath = answer
+        if not os.path.isfile(srcpath):
+            raise KeysNotFoundError([srcpath])
+        for dstpath in e.paths:
+            print("Kopiera {} till {}? (y/n) [n]:".format(srcpath, dstpath))
+            answer = input("> ")
+            if answer.lower().strip() == 'y':
+                print("Skapar kataloger...")
+                os.makedirs(os.path.dirname(dstpath))
+                print("Kopierar {} -> {}".format(srcpath, dstpath))
+                copyfile(srcpath, dstpath)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('origin', metavar='from', help="Varifrån ska du resa?")
@@ -100,6 +126,7 @@ def main():
     parser.add_argument('at', help="När ska du bege dig?")
     parser.add_argument('--verbose', '-v', action='store_true',
                         help="Skriv ut debuggutskrifter")
+    check_keys_installed()
     args = parser.parse_args()
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)

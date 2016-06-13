@@ -13,6 +13,14 @@ locations_filename = 'locations.xml'
 locations_file = resource_stream('slcli.resources', locations_filename)
 
 
+class KeysNotFoundError(IOError):
+    def __init__(self, paths):
+        self.message = 'Could not find the API keys in any of these locations:'
+        self.message = self.message+'\n'+'\n'.join(paths)
+        self.paths = paths
+        super(KeysNotFoundError, self).__init__(self.message)
+
+
 def get_keys():
     keys = dict()
     keys["platsuppslag"] = os.environ.get("PLATSUPPSLAG")
@@ -42,8 +50,7 @@ def find_keys():
                 continue
             else:
                 raise
-    exceptionhdr = 'Could not find the API keys in any of these locations:\n'
-    raise Exception(exceptionhdr+'\n'.join(resolvpaths))
+    raise KeysNotFoundError(resolvpaths)
 
 
 def read_keys(path):
