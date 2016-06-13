@@ -18,7 +18,7 @@ Stockholms Lokaltrafik - Command Line Interface.
     </root>
     ```
     där du byter ut de fejkade API-nycklarna mot riktiga nycklar. Har du inga nycklar kan du skaffa dem
-    på **trafiklab.se**. Du behöver nycklar för API:erna *Platsuppslag* och *Reseplanerare 2*.
+    på [trafiklab.se](https://www.trafiklab.se/api). Du behöver nycklar för API:erna *Platsuppslag* och *Reseplanerare 2*.
 3. Kör programmet och installera din **sensitive.xml**:
 ```
 $ rehash    # Uppdatera executable-paths om nödvändigt
