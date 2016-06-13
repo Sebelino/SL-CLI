@@ -120,7 +120,7 @@ def check_keys_installed():
                 copyfile(srcpath, dstpath)
 
 
-def main():
+def main(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument('origin', metavar='from', help="Varifrån ska du resa?")
     parser.add_argument('to', help="Vart ska du?")
@@ -128,7 +128,7 @@ def main():
     parser.add_argument('--verbose', '-v', action='store_true',
                         help="Skriv ut debuggutskrifter")
     check_keys_installed()
-    args = parser.parse_args()
+    args = args if args else parser.parse_args()
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
         starttime = time()
