@@ -9,15 +9,16 @@ Stockholms Lokaltrafik - Command Line Interface.
 # Installation
 1. `# python setup.py install`
 2. Skapa en fil **sensitive.xml** som du fyller med följande innehåll:
-```
-<?xml version='1.0' encoding='utf-8'?>
-<root>
-    <key name="platsuppslag"  >1234567890abcdefghijklmnopqrstuv</key>
-    <key name="reseplanerare2">1234567890abcdefghijklmnopqrstuv</key>
-</root>
-```
-där du byter ut de fejkade API-nycklarna mot riktiga nycklar. Har du inga nycklar kan du skaffa dem
-på **trafiklab.se**. Du behöver nycklar för API:erna *Platsuppslag* och *Reseplanerare 2*.
+
+    ```
+    <?xml version='1.0' encoding='utf-8'?>
+    <root>
+        <key name="platsuppslag"  >1234567890abcdefghijklmnopqrstuv</key>
+        <key name="reseplanerare2">1234567890abcdefghijklmnopqrstuv</key>
+    </root>
+    ```
+    där du byter ut de fejkade API-nycklarna mot riktiga nycklar. Har du inga nycklar kan du skaffa dem
+    på **trafiklab.se**. Du behöver nycklar för API:erna *Platsuppslag* och *Reseplanerare 2*.
 3. Kör programmet och installera din **sensitive.xml**:
 ```
 $ rehash    # Uppdatera executable-paths om nödvändigt
