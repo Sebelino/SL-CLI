@@ -42,7 +42,7 @@ def find_keys():
                 continue
             else:
                 raise
-    exceptionhdr = 'Could not find the API keys in any of these directories:\n'
+    exceptionhdr = 'Could not find the API keys in any of these locations:\n'
     raise Exception(exceptionhdr+'\n'.join(resolvpaths))
 
 
