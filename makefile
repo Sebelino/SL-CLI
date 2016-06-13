@@ -31,5 +31,5 @@ clean:
 	rm -rf .ropeproject
 	rm -rf build
 	rm -rf dist
-	rm -rf SLCLI.egg-info
+	rm -rf SL_CLI.egg-info
 	rm -rf locations.xml
