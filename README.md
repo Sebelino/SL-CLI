@@ -7,14 +7,18 @@ Stockholms Lokaltrafik - Command Line Interface.
 [![Coverage Status](https://coveralls.io/repos/github/Sebelino/SL-CLI/badge.svg?branch=master)](https://coveralls.io/github/Sebelino/SL-CLI?branch=master)
 
 # Installation
-1. Skapa en kopia av **sensitive.example.xml** som du kallar **sensitive.xml**.
-2. Öppna **sensitive.xml** och byt ut de fejkade API-nycklarna mot riktiga nycklar. Har du inga
-   nycklar kan du skaffa dem på **trafiklab.se**. Du behöver nycklar för API:erna *Platsuppslag* och *Reseplanerare 2*.
-3. Optionellt: Redigera **config.xml**. By default kommer **sensitive.xml** att flyttas till `%APPDATA%\sl-cli\` på Windows vid installation.
-4. Kör installationsskriptet:
-```bash
-$ python setup.py install
+1. `$ python setup.py install`
+2. Skapa en fil **sensitive.xml** som du fyller med följande innehåll:
 ```
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+    <key name="platsuppslag"  >1234567890abcdefghijklmnopqrstuv</key>
+    <key name="reseplanerare2">1234567890abcdefghijklmnopqrstuv</key>
+</root>
+```
+där du byter ut de fejkade API-nycklarna mot riktiga nycklar. Har du inga nycklar kan du skaffa dem
+på **trafiklab.se**. Du behöver nycklar för API:erna *Platsuppslag* och *Reseplanerare 2*.
+3. Placera **sensitive.xml** i `~/.config/sl-cli/` eller `%APPDATA%\sl-cli\`.
 
 ## Dependencies
 * [Python3](https://www.python.org/downloads/)
