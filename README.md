@@ -7,7 +7,7 @@ Stockholms Lokaltrafik - Command Line Interface.
 [![Coverage Status](https://coveralls.io/repos/github/Sebelino/SL-CLI/badge.svg?branch=master)](https://coveralls.io/github/Sebelino/SL-CLI?branch=master)
 
 # Installation
-1. `$ python setup.py install`
+1. `# python setup.py install`
 2. Skapa en fil **sensitive.xml** som du fyller med följande innehåll:
 ```
 <?xml version='1.0' encoding='utf-8'?>
@@ -18,7 +18,20 @@ Stockholms Lokaltrafik - Command Line Interface.
 ```
 där du byter ut de fejkade API-nycklarna mot riktiga nycklar. Har du inga nycklar kan du skaffa dem
 på **trafiklab.se**. Du behöver nycklar för API:erna *Platsuppslag* och *Reseplanerare 2*.
-3. Placera **sensitive.xml** i `~/.config/sl-cli/` eller `%APPDATA%\sl-cli\`.
+3. Kör programmet och installera din **sensitive.xml**:
+```
+$ rehash    # Uppdatera executable-paths om nödvändigt
+$ slcli
+Dina API-nycklar är inte installerade.
+Ange sökvägen till dina nycklar [./sensitive.xml]:
+> 
+Kopiera ./sensitive.xml till /home/sebelino/.config/sl-cli/sensitive.xml? (y/n) [n]:
+> y
+Skapar kataloger...
+Kopierar ./sensitive.xml -> /home/sebelino/.config/sl-cli/sensitive.xml
+usage: slcli.py [-h] [--verbose] from to at
+slcli.py: error: the following arguments are required: from, to, at
+```
 
 ## Dependencies
 * [Python3](https://www.python.org/downloads/)
