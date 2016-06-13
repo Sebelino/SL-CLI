@@ -28,9 +28,11 @@ def find_keys():
     """ Reads API keys from the XML files referenced in the param xml """
     locations_xml = locations_file.read().decode('utf8')
     root = ET.fromstring(locations_xml)
-    paths = [c.text for c in root if c.tag == 'path']
-    rpaths = [os.path.expanduser(os.path.expandvars(p)) for p in paths]
-    for rpath in rpaths:
+    paths = [c for c in root if 'os' not in c.attrib
+                                or c.attrib['os'] == os.name]
+    paths = [c.text for c in paths if c.tag == 'path']
+    resolvpaths = [os.path.expanduser(os.path.expandvars(p)) for p in paths]
+    for rpath in resolvpaths:
         try:
             dirpath = os.path.dirname(locations_filename)
             fullpath = os.path.join(dirpath, rpath)
@@ -41,7 +43,7 @@ def find_keys():
             else:
                 raise
     exceptionhdr = 'Could not find the API keys in any of these directories:\n'
-    raise Exception(exceptionhdr+'\n'.join(rpaths))
+    raise Exception(exceptionhdr+'\n'.join(resolvpaths))
 
 
 def read_keys(path):
