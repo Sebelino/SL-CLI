@@ -77,24 +77,25 @@ def travel(origin, destination, time):
     return result
 
 
-def printtrip(trip):
+def trip2str(trip):
     """ Pretty-printing. """
     header = "{} {} {} - {}:".format(trip['departureTime'],
                                      trip['departureDate'], trip['origin'],
                                      trip['destination'])
-    print(header)
+    output = [header]
     for subtrip in trip['trip']:
         originstr = u'{}....{}'.format(subtrip['departureTime'],
                                        subtrip['origin'])
-        print(originstr)
+        output.append(originstr)
         for subsubtrip in subtrip['trip']:
             t = subsubtrip['arrivalTime']
             d = subsubtrip['stop']
             intermediatestr = t+u'.'*8+d
-            print(intermediatestr)
+            output.append(intermediatestr)
         destinationstr = u'{}....{}'.format(subtrip['arrivalTime'],
                                             subtrip['destination'])
-        print(destinationstr)
+        output.append(destinationstr)
+    return "\n".join(output)
 
 
 def check_keys_installed():
@@ -137,7 +138,7 @@ def main():
         elapsedtime = time()-starttime
         logging.debug("Elapsed request time: {0:.2f} seconds"
                       .format(elapsedtime))
-    printtrip(results)
+    print(trip2str(results))
 
 if __name__ == '__main__':
     main()
