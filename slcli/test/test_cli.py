@@ -1,8 +1,26 @@
 #!/usr/bin/env python
 
 from nose.tools import assert_equal, assert_less_equal
-from ..slcli import travel, trip2str
+from ..slcli import travel, trip2str, main
 from datetime import datetime, timedelta
+import sys
+from io import StringIO
+from argparse import Namespace
+
+
+def assert_matches(string, pattern, single_char, lines_char):
+    """ Raises AssertionError if the string does not match the pattern """
+    slines = string.strip().split("\n")
+    paragraphs = pattern.split(lines_char)
+    plines = [p.strip().split("\n") for p in paragraphs]
+    delta = len(slines)-sum(len(lines) for lines in plines)
+    missing = slines[len(plines[0]):len(plines[0])+delta]
+    plines[1:1] = [missing]
+    plines = [line for lines in plines for line in lines]
+    for sline, pline in zip(slines, plines):
+        assert_equal(len(sline), len(pline))
+        s2line = "".join(s if s == "´" else p for s, p in zip(sline, pline))
+        assert_equal(s2line, pline)
 
 
 def test_trip2str():
@@ -157,3 +175,42 @@ class TestTravelToKTH:
         assert_less_equal(30, delta.total_seconds()/60)
         # Should take well below 2 hours:
         assert_less_equal(delta.total_seconds()/60, 120)
+
+
+class TestMain:
+    def setup(self):
+        self.old_stdout = sys.stdout
+        sys.stdout = self.mystdout = StringIO()
+
+    def test_main(self):
+        main(Namespace(origin="vårsta", to="teknisk", at="12:00",
+                       verbose=False))
+        returned = self.mystdout.getvalue()
+        sys.stdout = self.old_stdout
+        # There are two possibile routes here:
+        expected = """
+12:´´ 20´´-´´-´´ Vårsta centrum (Botkyrka) - Tekniska högskolan (Stockholm):
+12:´´....Vårsta centrum
+1´:´´........Malmtorp
+1´:´´........Bergudden
+1´:´´........Kassmyra
+*
+1´:´´....Tumba station
+1´:´´....Tumba
+1´:´´........Tullinge
+1´:´´........Flemingsberg
+1´:´´........Huddinge
+1´:´´........Stuvsta
+1´:´´........Älvsjö
+1´:´´........Årstaberg
+1´:´´........Stockholms södra
+1´:´´....Stockholms central
+1´:´´....T-Centralen
+1´:´´........Östermalmstorg
+1´:´´........Stadion
+1´:´´....Tekniska högskolan
+        """
+        assert_matches(returned, expected, "´", "*")
+
+    def teardown(self):
+        sys.stdout = self.old_stdout
