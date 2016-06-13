@@ -11,6 +11,7 @@ from pkg_resources import resource_stream
 # XML file storing one or more paths to the XML file containing the API keys
 locations_filename = 'locations.xml'
 locations_file = resource_stream('slcli.resources', locations_filename)
+locations_xml = locations_file.read().decode('utf8')
 
 
 class KeysNotFoundError(IOError):
@@ -34,7 +35,6 @@ def get_keys():
 
 def find_keys():
     """ Reads API keys from the XML files referenced in the param xml """
-    locations_xml = locations_file.read().decode('utf8')
     root = ET.fromstring(locations_xml)
     paths = [c for c in root if 'os' not in c.attrib
                                 or c.attrib['os'] == os.name]
