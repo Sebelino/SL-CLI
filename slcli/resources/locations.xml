@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Paths specifying where to look for an XML file containing the API keys -->
+<root>
+    <path os="posix">~$USER/.config/sl-cli/sensitive.xml</path>
+    <path os="nt">%APPDATA%\sl-cli\sensitive.xml</path>
+</root>
+
