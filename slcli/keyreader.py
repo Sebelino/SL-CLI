@@ -29,7 +29,6 @@ def get_keys():
     if all(k is None for k in keys.values()):
         return find_keys()
     else:
-        print("Found keys in environment variables. Using those...")
         return keys
 
 
