@@ -19,5 +19,6 @@ setup(
             'sl-cli = slcli.slcli:main',
         ],
     },
+    data_files=[("", ["LICENSE"])],
     license=open('LICENSE').read(),
 )
