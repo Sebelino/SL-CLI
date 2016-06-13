@@ -18,7 +18,8 @@ def assert_matches(string, pattern, single_char, lines_char):
     plines[1:1] = [missing]
     plines = [line for lines in plines for line in lines]
     for sline, pline in zip(slines, plines):
-        assert_equal(len(sline), len(pline))
+        if len(sline) != len(pline):
+            assert_equal(sline, pline)
         s2line = "".join(s if s == "´" else p for s, p in zip(sline, pline))
         assert_equal(s2line, pline)
 
