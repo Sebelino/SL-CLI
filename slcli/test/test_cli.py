@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from nose.tools import assert_equal
-from ..slcli import trip2str
+from nose.tools import assert_equal, assert_less_equal
+from ..slcli import travel, trip2str
+from datetime import datetime, timedelta
 
 
 def test_trip2str():
@@ -124,3 +125,35 @@ def test_trip2str():
     for rline, eline in zip(returned.split("\n"), expected.split("\n")):
         assert_equal(rline, eline)
     assert_equal(returned, expected)
+
+
+class TestTravelToKTH:
+    @classmethod
+    def setup_class(cls):
+        cls.params = ["vårsta", "teknisk", "12:00"]
+        cls.returned = travel(*cls.params)
+
+    def test_origin(self):
+        ret = self.returned["origin"]
+        assert_equal(ret, "Vårsta centrum (Botkyrka)")
+
+    def test_destination(self):
+        ret = self.returned["destination"]
+        assert_equal(ret, "Tekniska högskolan (Stockholm)")
+
+    def test_trip_length(self):
+        ret = len(self.returned["trip"])
+        assert_equal(ret, 3)
+
+    def test_time(self):
+        astr = self.returned["departureTime"]
+        bstr = self.returned["trip"][-1]["arrivalTime"]
+        a = datetime.strptime(astr, "%H:%M")
+        b = datetime.strptime(bstr, "%H:%M")
+        delta = b-a
+        if delta.days < 0:
+            delta = delta+timedelta(days=1)
+        # We do not yet have the technology to make it below 30 minutes:
+        assert_less_equal(30, delta.total_seconds()/60)
+        # Should take well below 2 hours:
+        assert_less_equal(delta.total_seconds()/60, 120)
