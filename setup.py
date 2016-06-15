@@ -23,4 +23,7 @@ setup(
         ],
     },
     license='MIT',
+    install_requires=[
+        'xmltodict',
+    ],
 )
