@@ -35,10 +35,6 @@ def request_url(url, attempts=1):
     return dictresponse
 
 
-def unquote(ustr):
-    return urllib.parse.unquote(ustr)
-
-
 def cli(api):
     """ Enables the user to specify command-line arguments. """
     parser = argparse.ArgumentParser()

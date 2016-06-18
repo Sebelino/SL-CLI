@@ -8,10 +8,10 @@ import os.path
 from pprint import pformat
 from time import time
 from shutil import copyfile
+from urllib.parse import unquote
 
 from .apis.reseplanerare2 import tripapi, journeydetailapi as japi
 from .apis.platsuppslag import api as papi
-from .apis.api import unquote
 from .keyreader import get_keys
 from .keyreader import KeysNotFoundError
 
