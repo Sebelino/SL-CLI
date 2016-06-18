@@ -7,11 +7,11 @@ import urllib.parse
 from urllib.error import URLError
 import json
 from xml.parsers.expat import ExpatError
-import xmltodict
 import logging
+import xmltodict
 
 
-def requestURL(url, attempts=1):
+def request_url(url, attempts=1):
     """ URL -> dict.
         :raises: Exception if the site could not be accessed """
     if attempts < 1:
@@ -24,7 +24,7 @@ def requestURL(url, attempts=1):
         if attempts <= 1:
             raise URLError("Kunde inte öppna URL. Felaktig URL, eller så är din"
                            "internetuppkoppling nere.")
-        return requestURL(url, attempts-1)
+        return request_url(url, attempts-1)
     try:
         dictresponse = json.loads(response)
     except ValueError:
@@ -100,7 +100,7 @@ class API(object):
         return self._interface
 
     def request(self, values):
-        return requestURL(self.context(values))
+        return request_url(self.context(values))
 
 if __name__ == '__main__':
     print("Sample API instance:")

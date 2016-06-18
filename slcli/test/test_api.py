@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from nose.tools import raises, assert_equal
-from ..apis.api import requestURL
+from ..apis.api import request_url
 from random import randint
 from urllib.error import URLError
 
@@ -15,7 +15,7 @@ class TestRequestURL:
         baseurl = ("https://raw.githubusercontent.com/Sebelino/SL-CLI/devel/slc"
                    "li/test/assets/json/")
         url = baseurl+filename
-        returned = requestURL(url)
+        returned = request_url(url)
         assert_equal(returned, expected)
 
     def test_empty_json(self):
