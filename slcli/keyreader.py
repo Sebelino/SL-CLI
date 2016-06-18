@@ -35,8 +35,8 @@ def get_keys():
 def find_keys():
     """ Reads API keys from the XML files referenced in the param xml """
     root = ET.fromstring(locations_xml)
-    paths = [c for c in root if 'os' not in c.attrib
-                                or c.attrib['os'] == os.name]
+    paths = [c for c in root if 'os' not in c.attrib or
+             c.attrib['os'] == os.name]
     paths = [c.text for c in paths if c.tag == 'path']
     resolvpaths = [os.path.expanduser(os.path.expandvars(p)) for p in paths]
     for rpath in resolvpaths:
