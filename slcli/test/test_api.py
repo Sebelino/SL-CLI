@@ -2,14 +2,11 @@
 
 from nose.tools import raises, assert_equal
 from ..apis.api import requestURL
-import socket
+from random import randint
+from urllib.error import URLError
 
 
 class TestRequestURL:
-    @classmethod
-    def setup_class(cls):
-        cls.oldsocket = socket.socket
-
     @staticmethod
     def guard(*args, **kwargs):
         raise Exception("Internet access intentionally blocked.")
@@ -54,11 +51,7 @@ class TestRequestURL:
     def test_non_json(self):
         self.request_url("nonjson.txt", dict())
 
-    @raises(Exception)
-    def test_closed_socket(self):
-        socket.socket = self.guard
-        requestURL(self.url)
-
-    def teardown(self):
-        """ Restore internet connection in case it was blocked """
-        socket.socket = self.oldsocket
+    @raises(URLError)
+    def test_inaccessible_url(self):
+        randomstr = str(randint(10**5, 10**6))
+        self.request_url(randomstr, dict())
