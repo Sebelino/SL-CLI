@@ -16,8 +16,8 @@ class TestRequestURL:
 
     def test_empty_json(self):
         branch = "devel"
-        url = ("https://github.com/Sebelino/SL-CLI/tree/{}/slcli/test/assets/js"
-               "on/empty.json").format(branch)
+        url = ("https://raw.githubusercontent.com/Sebelino/SL-CLI/{}/slcli/test"
+               "/assets/json/empty.json").format(branch)
         returned = requestURL(url)
         expected = {}
         assert_equal(returned, expected)
