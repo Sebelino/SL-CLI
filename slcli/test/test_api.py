@@ -14,19 +14,45 @@ class TestRequestURL:
     def guard(*args, **kwargs):
         raise Exception("Internet access intentionally blocked.")
 
-    def test_empty_json(self):
-        branch = "devel"
-        url = ("https://raw.githubusercontent.com/Sebelino/SL-CLI/{}/slcli/test"
-               "/assets/json/empty.json").format(branch)
+    def request_url(self, filename, expected):
+        baseurl = ("https://raw.githubusercontent.com/Sebelino/SL-CLI/devel/slc"
+                   "li/test/assets/json/")
+        url = baseurl+filename
         returned = requestURL(url)
-        expected = {}
         assert_equal(returned, expected)
 
-    def test_nontrivial_json(self):
-        assert False
+    def test_empty_json(self):
+        self.request_url("empty.json", dict())
 
+    def test_nontrivial_json(self):
+        expected = {
+            "glossary": {
+                "title": "example glossary",
+                "GlossDiv": {
+                    "title": "S",
+                    "GlossList": {
+                        "GlossEntry": {
+                            "ID": "SGML",
+                            "SortAs": "SGML",
+                            "GlossTerm": "Standard Generalized Markup Language",
+                            "Acronym": "SGML",
+                            "Abbrev": "ISO 8879:1986",
+                            "GlossDef": {
+                                "para": ("A meta-markup language, used to creat"
+                                         "e markup languages such as DocBook."),
+                                "GlossSeeAlso": ["GML", "XML"]
+                            },
+                            "GlossSee": "markup"
+                        }
+                    }
+                }
+            }
+        }
+        self.request_url("nontrivial.json", expected)
+
+    @raises(ValueError)
     def test_non_json(self):
-        assert False
+        self.request_url("nonjson.txt", dict())
 
     @raises(Exception)
     def test_closed_socket(self):
