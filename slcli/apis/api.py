@@ -16,7 +16,7 @@ def request_url(url, attempts=1):
         :raises: Exception if the site could not be accessed """
     if attempts < 1:
         raise ValueError("Number of URL request attempts must be >= 1.")
-    logging.debug("Requesting URL: {}".format(url))
+    logging.debug("Requesting URL: %s", url)
     try:
         responsebytes = urllib.request.urlopen(url).read()
         response = responsebytes.decode('utf8')

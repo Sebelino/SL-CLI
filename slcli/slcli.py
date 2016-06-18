@@ -136,8 +136,7 @@ def main(args=None):
     if args.verbose:
         logging.debug(pformat(results))
         elapsedtime = time()-starttime
-        logging.debug("Elapsed request time: {0:.2f} seconds"
-                      .format(elapsedtime))
+        logging.debug("Elapsed request time: %f seconds", elapsedtime)
     print(trip2str(results))
 
 if __name__ == '__main__':
