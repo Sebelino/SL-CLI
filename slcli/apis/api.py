@@ -59,7 +59,7 @@ def cli(api):
     print(json.dumps(response))
 
 
-class API:
+class API(object):
     """ Any API associated with trafiklab.se. """
 
     def __init__(self, baseurl, interface):
