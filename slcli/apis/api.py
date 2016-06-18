@@ -22,8 +22,8 @@ def request_url(url, attempts=1):
         response = responsebytes.decode('utf8')
     except URLError:
         if attempts <= 1:
-            raise URLError("Kunde inte öppna URL. Felaktig URL, eller så är din"
-                           "internetuppkoppling nere.")
+            raise URLError("Kunde inte öppna URL. Felaktig URL, eller så är"
+                           "din internetuppkoppling nere.")
         return request_url(url, attempts-1)
     try:
         dictresponse = json.loads(response)
@@ -42,8 +42,8 @@ def cli(api):
     positions = [(interface[k]['position'], k) for k in interface
                  if 'position' in interface[k]]
     positions.sort(key=lambda pair: pair[0])
-    unpositioned = [k for k in interface if interface[k]['required']
-                    and k not in {f for (_, f) in positions}]
+    unpositioned = [k for k in interface if interface[k]['required'] and
+                    k not in {f for (_, f) in positions}]
     fields = [k for (_, k) in positions]+unpositioned
     for k in fields:
         props = interface[k]
@@ -75,7 +75,8 @@ class API(object):
 
     def context(self, values):
         """
-        :returns: An URL with the parameters and its respecive parameters added.
+        :returns: An URL with the parameters and its respecive parameters
+        added.
         Example:
         https://api.sl.se/api2/typeahead.json?key=123abc&searchstring=Vårsta
         """
