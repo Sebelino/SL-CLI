@@ -4,6 +4,7 @@ SL-CLI
 Stockholms Lokaltrafik - Command Line Interface.
 
 [![Build Status](https://travis-ci.org/Sebelino/SL-CLI.svg?branch=master)](https://travis-ci.org/Sebelino/SL-CLI)
+[![Code Health](https://landscape.io/github/Sebelino/SL-CLI/master/landscape.svg?style=flat)](https://landscape.io/github/Sebelino/SL-CLI/master)
 [![Coverage Status](https://coveralls.io/repos/github/Sebelino/SL-CLI/badge.svg?branch=master)](https://coveralls.io/github/Sebelino/SL-CLI?branch=master)
 
 # Installation
