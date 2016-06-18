@@ -4,24 +4,27 @@
 import argparse
 import sys
 import urllib.parse
+from urllib.error import URLError
 import json
 from xml.parsers.expat import ExpatError
 import xmltodict
 import logging
 
 
-def requestURL(url, retries=10):
+def requestURL(url, attempts=1):
     """ URL -> dict.
         :raises: Exception if the site could not be accessed """
+    if attempts < 1:
+        raise ValueError("Number of URL request attempts must be >= 1.")
     logging.debug("Requesting URL: {}".format(url))
     try:
         responsebytes = urllib.request.urlopen(url).read()
         response = responsebytes.decode('utf8')
-    except urllib.error.URLError:
-        return requestURL(url, retries-1)
-        raise Exception("Kunde inte öppna URL. Felaktig URL, eller så är din"
-                        " internetuppkoppling nere.")
-        return None
+    except URLError:
+        if attempts <= 1:
+            raise URLError("Kunde inte öppna URL. Felaktig URL, eller så är din"
+                           "internetuppkoppling nere.")
+        return requestURL(url, attempts-1)
     try:
         dictresponse = json.loads(response)
     except ValueError:
