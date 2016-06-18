@@ -44,7 +44,7 @@ def cli(api):
     positions.sort(key=lambda pair: pair[0])
     unpositioned = [k for k in interface if interface[k]['required']
                     and k not in {f for (_, f) in positions}]
-    fields = [k for (n, k) in positions]+unpositioned
+    fields = [k for (_, k) in positions]+unpositioned
     for k in fields:
         props = interface[k]
         optionalprefix = '' if props['required'] else '--'
