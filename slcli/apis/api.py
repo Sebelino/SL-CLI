@@ -5,6 +5,7 @@ import argparse
 import sys
 import urllib.parse
 import json
+from xml.parsers.expat import ExpatError
 import xmltodict
 import logging
 
@@ -24,7 +25,10 @@ def requestURL(url, retries=10):
     try:
         dictresponse = json.loads(response)
     except ValueError:
-        dictresponse = xmltodict.parse(response)
+        try:
+            dictresponse = xmltodict.parse(response)
+        except ExpatError:
+            raise ValueError("Resource contents is neither JSON nor XML.")
     return dictresponse
 
 
