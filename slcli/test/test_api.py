@@ -23,10 +23,10 @@ class TestRequestURL:
         assert_equal(returned, expected)
 
     def test_nontrivial_json(self):
-        pass
+        assert False
 
     def test_non_json(self):
-        pass
+        assert False
 
     @raises(Exception)
     def test_closed_socket(self):
