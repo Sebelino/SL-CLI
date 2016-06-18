@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+""" Routines used by the API wrapper modules """
+
 import argparse
 import sys
 import urllib.parse
