@@ -13,6 +13,11 @@ coverage:
 test:
 	@nosetests -vs
 
+classes_slcli.png:
+	pyreverse -o png -p slcli ./slcli
+
+packages_slcli.png: classes_slcli.png
+
 venv: venv/bin/activate
 
 venv/bin/activate: requirements.txt
