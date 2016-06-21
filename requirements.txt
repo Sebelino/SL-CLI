@@ -1,1 +1,1 @@
-xmltodict==0.10.1
+xmltodict==0.10.2
