@@ -6,6 +6,7 @@ Stockholms Lokaltrafik - Command Line Interface.
 **Build** | **Status**
 -----|-------
 Linux | [![Build Status](https://travis-ci.org/Sebelino/SL-CLI.svg?branch=master)](https://travis-ci.org/Sebelino/SL-CLI)
+Windows | [![Build status](https://ci.appveyor.com/api/projects/status/or3wjem7kyrr9x2v/branch/master?svg=true)](https://ci.appveyor.com/project/Sebelino/sl-cli/branch/master)
 Landscape | [![Code Health](https://landscape.io/github/Sebelino/SL-CLI/master/landscape.svg?style=flat)](https://landscape.io/github/Sebelino/SL-CLI/master)
 Codacy | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/67233c439fd349bfa2c57d190cd4f2e4)](https://www.codacy.com/app/sebelino7/SL-CLI?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Sebelino/SL-CLI&amp;utm_campaign=Badge_Grade)
 Coveralls | [![Coverage Status](https://coveralls.io/repos/github/Sebelino/SL-CLI/badge.svg?branch=master)](https://coveralls.io/github/Sebelino/SL-CLI?branch=master)
