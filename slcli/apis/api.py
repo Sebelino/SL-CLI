@@ -99,7 +99,7 @@ class API(object):
         return self._interface
 
     def request(self, values):
-        return request_url(self.context(values))
+        return request_url(self.context(values), 5)
 
 if __name__ == '__main__':
     print("Sample API instance:")

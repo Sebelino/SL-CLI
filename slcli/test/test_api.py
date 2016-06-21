@@ -15,7 +15,7 @@ class TestRequestURL:
         baseurl = ("https://raw.githubusercontent.com/Sebelino/SL-CLI/devel/slc"
                    "li/test/assets/json/")
         url = baseurl+filename
-        returned = request_url(url)
+        returned = request_url(url, 5)
         assert_equal(returned, expected)
 
     def test_empty_json(self):
