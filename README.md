@@ -1,7 +1,10 @@
 SL-CLI
 ======
+*Stockholms Lokaltrafik - Command Line Interface*
 
-Stockholms Lokaltrafik - Command Line Interface.
+Trött på grafiska gränssnitt? Är du en sann terminal-junkie? Har du en fetisch för att sitta framför terminalfönster med grön text på svart bakgrund i oldschool UNIX-anda? Drömmer du om en chans att imponera på dina anhöriga med dina l33t hax0r skills? Vill du att jag ska sluta ställa dessa frågor och komma till saken?
+
+Med SL-CLI får du reseinformation direkt i kommandotolken utan att ens behöva ha igång en fönsterhanterare. Programmet är tänkt att fungera som ett alternativ till att få reseinformation via webbplatsen http://sl.se eller appen STHLM Traveling.
 
 **Build** | **Status**
 -----|-------
