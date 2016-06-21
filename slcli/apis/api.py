@@ -24,7 +24,7 @@ def request_url(url, attempts=1):
         response = responsebytes.decode('utf8')
     except URLError:
         if attempts <= 1:
-            raise URLError("Kunde inte öppna URL. Felaktig URL, eller så är"
+            raise URLError("Kunde inte öppna URL. Felaktig URL, eller så är "
                            "din internetuppkoppling nere.")
         return request_url(url, attempts-1)
     try:
