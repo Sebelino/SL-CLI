@@ -23,6 +23,7 @@ def request_url(url, attempts=1):
         responsebytes = urllib.request.urlopen(url).read()
         response = responsebytes.decode('utf8')
     except URLError:
+        logging.debug("Request failed. attempts = %d", attempts)
         if attempts <= 1:
             raise URLError("Kunde inte öppna URL. Felaktig URL, eller så är "
                            "din internetuppkoppling nere.")
