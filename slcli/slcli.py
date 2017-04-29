@@ -42,7 +42,14 @@ def travel(origin, destination, time):
     trips = rresponse['TripList']['Trip']
     toptrip = trips[0]['LegList']['Leg']
     subtrips = []
-    for st in toptrip:
+    if isinstance(toptrip, dict):
+        received_subtrips = [toptrip]
+    elif isinstance(toptrip, list):
+        received_subtrips = toptrip
+    else:
+        errmsg = "Expected top trip to be list or dict; received type: {}"
+        raise RuntimeError(errmsg.format(type(toptrip)))
+    for st in received_subtrips:
         if st['type'] == 'WALK':  # Skip information about walking
             continue
         if 'JourneyDetailRef' in st:
@@ -68,8 +75,8 @@ def travel(origin, destination, time):
         }
         subtrips.append(subtrip)
     result = {
-        'departureDate': toptrip[0]['Origin']['date'],
-        'departureTime': toptrip[0]['Origin']['time'],
+        'departureDate': received_subtrips[0]['Origin']['date'],
+        'departureTime': received_subtrips[0]['Origin']['time'],
         'origin': startpoint['name'],
         'destination': endpoint['name'],
         'trip': subtrips,
