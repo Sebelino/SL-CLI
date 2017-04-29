@@ -188,7 +188,7 @@ class TestMain:
                        verbose=False))
         returned = self.mystdout.getvalue()
         sys.stdout = self.old_stdout
-        # There are two possibile routes here:
+        # There are two possible routes here:
         expected = """
 12:´´ 20´´-´´-´´ Vårsta centrum (Botkyrka) - Tekniska högskolan (Stockholm):
 12:´´....Vårsta centrum
