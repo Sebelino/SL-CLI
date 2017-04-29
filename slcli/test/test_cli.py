@@ -183,7 +183,7 @@ class TestMain:
         self.old_stdout = sys.stdout
         sys.stdout = self.mystdout = StringIO()
 
-    def test_main(self):
+    def test_varsta_to_teknisk(self):
         main(Namespace(origin="vårsta", to="teknisk", at="12:00",
                        verbose=False))
         returned = self.mystdout.getvalue()
@@ -210,6 +210,24 @@ class TestMain:
 1´:´´........Östermalmstorg
 1´:´´........Stadion
 1´:´´....Tekniska högskolan
+        """
+        assert_matches(returned, expected, "´", "*")
+
+
+    def test_varsta_to_tumba(self):
+        main(Namespace(origin="vårsta", to="tumba", at="23:00",
+                       verbose=False))
+        returned = self.mystdout.getvalue()
+        sys.stdout = self.old_stdout
+        # Long route: bus 716; short route: 717/727/279
+        expected = """
+23:´´ 20´´-´´-´´ Vårsta centrum (Botkyrka) - Tumba (Botkyrka):
+23:´´....Vårsta centrum
+´´:´´........Malmtorp
+´´:´´........Bergudden
+´´:´´........Kassmyra
+*
+´´:´´....Tumba station
         """
         assert_matches(returned, expected, "´", "*")
 
