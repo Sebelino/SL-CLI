@@ -20,7 +20,7 @@ def assert_matches(string, pattern, single_char, lines_char):
     for sline, pline in zip(slines, plines):
         if len(sline) != len(pline):
             assert_equal(sline, pline)
-        s2line = "".join(s if s == "´" else p for s, p in zip(sline, pline))
+        s2line = "".join(s if s == single_char else p for s, p in zip(sline, pline))
         assert_equal(s2line, pline)
 
 
