@@ -4,6 +4,7 @@ from nose.tools import assert_equal, assert_less_equal
 from ..slcli import travel, trip2str, main
 from datetime import datetime, timedelta
 import sys
+import re
 from io import StringIO
 from argparse import Namespace
 
@@ -22,6 +23,11 @@ def assert_matches(string, pattern, single_char, lines_char):
             assert_equal(sline, pline)
         s2line = "".join(s if s == single_char else p for s, p in zip(sline, pline))
         assert_equal(s2line, pline)
+
+
+def assert_matches_regex(string, pattern):
+    r = re.compile(pattern)
+    assert r.fullmatch(string), "--- Returned output: ---\n{}\n--- does not match regex ---\n{}".format(string, pattern)
 
 
 def test_trip2str():
@@ -188,8 +194,41 @@ class TestMain:
                        verbose=False))
         returned = self.mystdout.getvalue()
         sys.stdout = self.old_stdout
-        # There are two possible routes here:
-        expected = """
+        expected_regex = ("""
+1\d:\d\d 20\d\d-\d\d-\d\d Vårsta centrum \(Botkyrka\) - Tekniska högskolan \(Stockholm\):
+1\d:\d\d\.{4}Vårsta centrum
+1\d:\d\d\.{4}\.{4}Malmtorp
+1\d:\d\d\.{4}\.{4}Bergudden
+1\d:\d\d\.{4}\.{4}Kassmyra
+.*
+1\d:\d\d\.{4}Tumba station
+1\d:\d\d\.{4}Tumba
+1\d:\d\d\.{4}\.{4}Tullinge
+1\d:\d\d\.{4}\.{4}Flemingsberg
+1\d:\d\d\.{4}\.{4}Huddinge
+1\d:\d\d\.{4}\.{4}Stuvsta
+1\d:\d\d\.{4}\.{4}Älvsjö
+1\d:\d\d\.{4}\.{4}Årstaberg
+1\d:\d\d\.{4}\.{4}Stockholms södra
+(
+        """.strip() + """
+1\d:\d\d\.{4}Stockholm City
+1\d:\d\d\.{4}T-Centralen
+1\d:\d\d\.{4}\.{4}Östermalmstorg
+1\d:\d\d\.{4}\.{4}Stadion
+1\d:\d\d\.{4}Tekniska högskolan
+        """.strip() + "|" + """
+1\d:\d\d\.{4}\.{4}Stockholm City
+1\d:\d\d\.{4}Stockholm Odenplan
+1\d:\d\d\.{4}Odenplan
+1\d:\d\d\.{4}\.{4}Stadsbiblioteket
+1\d:\d\d\.{4}\.{4}Roslagsgatan
+1\d:\d\d\.{4}\.{4}Valhallavägen
+1\d:\d\d\.{4}Östra station
+        """.strip() + """
+)""".strip())
+        #assert_matches_regex(returned, expected_regex)  # Screw regex; too hard to debug!
+
 12:´´ 20´´-´´-´´ Vårsta centrum (Botkyrka) - Tekniska högskolan (Stockholm):
 12:´´....Vårsta centrum
 1´:´´........Malmtorp
