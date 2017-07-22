@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from nose.tools import assert_equal, assert_less_equal
-from ..slcli import travel, trip2str, main
+from nose.tools import assert_equal, assert_less_equal, assert_greater_equal
+from slcli.slcli import travel, trip2str, main
 from datetime import datetime, timedelta
 import sys
 import re
@@ -23,6 +23,42 @@ def assert_matches(string, pattern, single_char, lines_char):
             assert_equal(sline, pline)
         s2line = "".join(s if s == single_char else p for s, p in zip(sline, pline))
         assert_equal(s2line, pline)
+
+
+def dag_paths(dag):
+    """ :return A frozenset containing every path (v1,v2,...,vn) such that each vi is nested within @dag and
+    is a direct element of at most one set.
+    :param @dag A nested structure of elements where each element is a string, a tuple or a frozenset. """
+    if dag == ():
+        return {()}
+    elif isinstance(dag[0], str):
+        return frozenset([(dag[0],) + t for t in dag_paths(dag[1:])])
+    elif isinstance(dag[0], tuple):
+        return dag_paths(dag[0] + dag[1:])
+    elif isinstance(dag[0], frozenset):
+        setofsets = frozenset([dag_paths((e,) + dag[1:]) for e in dag[0]])
+        return frozenset([x for y in setofsets for x in y])
+    else:
+        raise TypeError("Unexpected type: {}".format(type(dag[0])))
+
+
+def assert_matches_dag(string, dag, single_char, lines_char):
+    """ :raise AssertionError if there is no path through the directed acyclic graph @dag such that
+    @string matches the pattern given by the path.
+    :param @dag A nested structure of elements where each element is a string, a tuple or a frozenset. The
+    structure is isomorphic to a (transitively reduced) DAG in which every vertex is a string. The
+    concatenation of the vertices along any path in the DAG becomes a pattern which @string is
+    matched against. """
+    paths = dag_paths(dag)
+    patterns = {'\n'.join(v.strip() for v in p) for p in paths}
+    for pattern in patterns:
+        try:
+            assert_matches(string, pattern, single_char, lines_char)
+            break
+        except AssertionError:
+            pass
+    else:  # If no match:
+        raise AssertionError("--- Output: ---\n{}\n--- did not match any of the following {} patterns: ---\n{}".format(string, len(patterns), '\n\n'.join(patterns)))
 
 
 def assert_matches_regex(string, pattern):
@@ -168,7 +204,9 @@ class TestTravelToKTH:
 
     def test_trip_length(self):
         ret = len(self.returned["trip"])
-        assert_equal(ret, 3)
+        #assert_equal(ret, 3)  # General case
+        assert_greater_equal(ret, 3)  # Vårsta -> Tumba -> T-Centralen -> Tekniska högskolan [-> ...]
+        assert_less_equal(ret, 7)  # Not even SL could break this assertion
 
     def test_time(self):
         astr = self.returned["departureTime"]
@@ -180,7 +218,7 @@ class TestTravelToKTH:
             delta = delta+timedelta(days=1)
         # We do not yet have the technology to make it below 30 minutes:
         assert_less_equal(30, delta.total_seconds()/60)
-        # Should take well below 2 hours:
+        # Should take well below 2 hours (hopefully):
         assert_less_equal(delta.total_seconds()/60, 120)
 
 
@@ -229,12 +267,28 @@ class TestMain:
 )""".strip())
         #assert_matches_regex(returned, expected_regex)  # Screw regex; too hard to debug!
 
+        expected_dag = (
+            """
 12:´´ 20´´-´´-´´ Vårsta centrum (Botkyrka) - Tekniska högskolan (Stockholm):
 12:´´....Vårsta centrum
 1´:´´........Malmtorp
 1´:´´........Bergudden
 1´:´´........Kassmyra
-*
+            """, frozenset({  # Long route: bus 716; short route: 717/727/279
+                """
+1´:´´........Skäcklinge
+1´:´´........Skäcklinge gårdsväg
+1´:´´........Lövholmenvägen
+1´:´´........Toppvägen
+1´:´´........Hålvägen
+1´:´´........Passvägen
+                """,
+                """
+1´:´´........Skrävstavägen
+1´:´´........Solbo
+                """,
+            }),
+            """
 1´:´´....Tumba station
 1´:´´....Tumba
 1´:´´........Tullinge
@@ -244,13 +298,38 @@ class TestMain:
 1´:´´........Älvsjö
 1´:´´........Årstaberg
 1´:´´........Stockholms södra
-1´:´´....Stockholms central
+            """, frozenset({  # Usual route; other routes are exceptional
+                """
+1´:´´....Stockholm City
 1´:´´....T-Centralen
 1´:´´........Östermalmstorg
 1´:´´........Stadion
 1´:´´....Tekniska högskolan
-        """
-        assert_matches(returned, expected, "´", "*")
+                """,
+                """
+1´:´´........Stockholm City
+1´:´´....Stockholm Odenplan
+1´:´´....Odenplan
+1´:´´........Stadsbiblioteket
+1´:´´........Roslagsgatan
+1´:´´........Valhallavägen
+1´:´´....Östra station
+                """,
+                """
+1´:´´....Stockholm City
+1´:´´....T-Centralen
+1´:´´........Östermalmstorg
+1´:´´....Karlaplan
+1´:´´....Värtavägen
+1´:´´........Jungfrugatan
+1´:´´........Musikhögskolan
+1´:´´........Stadion (på Valhallavägen)
+1´:´´....Östra station
+                """,
+            }),
+
+        )
+        assert_matches_dag(returned, expected_dag, "´", "*")
 
 
     def test_varsta_to_tumba(self):
