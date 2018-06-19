@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from api import cli
-from reseplanerare2 import tripapi
+from reseplanerare3 import journeydetailapi
 
 if __name__ == '__main__':
-    cli(tripapi)
+    cli(journeydetailapi)

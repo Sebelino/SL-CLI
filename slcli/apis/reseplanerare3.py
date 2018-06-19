@@ -3,7 +3,7 @@
 
 from .api import API, cli
 
-tripapi = API(r'http://api.sl.se/api2/TravelplannerV2/trip.json', {
+tripapi = API(r'https://api.sl.se/api2/TravelplannerV3/trip.json', {
     'key': {'required': True, 'description': "Din API-nyckel.", 'position': 1},
     'originId': {'required': True,
                  'description': "Namn eller ID för startpunkten.",
@@ -13,15 +13,15 @@ tripapi = API(r'http://api.sl.se/api2/TravelplannerV2/trip.json', {
                'position': 3},
     'time': {'required': True, 'domain': str, 'description': "Tidpunkt.",
              'position': 4},
-    'lang': {'required': False, 'domain': {"sv", "en"}, 'default': "sv",
+    'lang': {'required': False, 'domain': {"de", "sv", "en"}, 'default': "de",
              'description': "Språket som resultaten presenteras i."},
 })
 
 journeydetailapi = \
-    API(r'http://api.sl.se/api2/TravelplannerV2/journeydetail.json', {
+    API(r'https://api.sl.se/api2/TravelplannerV3/journeydetail.json', {
         'key': {'required': True, 'description': "Din API-nyckel.",
                 'position': 1},
-        'ref': {'required': True, 'description': "Referensparameter erhållen "
+        'id': {'required': True, 'description': "Referensparameter erhållen "
                 "från tidigare trip-sökning.", 'position': 2},
     })
 
