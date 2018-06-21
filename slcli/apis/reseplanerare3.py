@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from .api import API, cli
+from slcli.apis.api import API, cli
 
 tripapi = API(r'https://api.sl.se/api2/TravelplannerV3/trip.json', {
     'key': {'required': True, 'description': "Din API-nyckel.", 'position': 1},
     'originId': {'required': True,
-                 'description': "Namn eller ID för startpunkten.",
+                 'description': "ID för startpunkten.",
                  'position': 2},
     'destId': {'required': True, 'domain': bool,
-               'description': "Namn eller ID för destinationen.",
+               'description': "ID för destinationen.",
                'position': 3},
-    'time': {'required': True, 'domain': str, 'description': "Tidpunkt.",
+    'time': {'required': True, 'domain': str, 'description': "Tidpunkt, format: HH:MM",
              'position': 4},
     'lang': {'required': False, 'domain': {"de", "sv", "en"}, 'default': "de",
              'description': "Språket som resultaten presenteras i."},

@@ -35,7 +35,7 @@ class TestReseplanerare3:
 
     def test_trip_suggestions_count(self):
         params = [
-            (7305, 9204, '8:00'),
+            (7305, 9204, '08:00'),
         ]
         for a, b, t in params:
             d = {'key': self.key, 'originId': a, 'destId': b, 'time': t}
