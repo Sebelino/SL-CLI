@@ -10,10 +10,10 @@ from time import time
 from shutil import copyfile
 from urllib.parse import unquote
 
-from .apis.reseplanerare3 import tripapi, journeydetailapi as japi
-from .apis.platsuppslag import api as papi
-from .keyreader import get_keys
-from .keyreader import KeysNotFoundError
+from slcli.apis.reseplanerare3 import tripapi, journeydetailapi as japi
+from slcli.apis.platsuppslag import api as papi
+from slcli.keyreader import get_keys
+from slcli.keyreader import KeysNotFoundError
 
 
 def travel(origin, destination, time):
@@ -56,32 +56,40 @@ def travel(origin, destination, time):
             refvalue = unquote(st['JourneyDetailRef']['ref'])
             sstsresponse = japi.request({'key': apikeys['reseplanerare3'],
                                          'id': refvalue})
-            allstops = sstsresponse['Stops']['Stop']
+            try:
+                allstops = sstsresponse['Stops']['Stop']
+            except KeyError:
+                raise  # In rare cases, key 'Stops' is not found for some reason
             oid = st['Origin']['id']
             did = st['Destination']['id']
             sameid = [s['id'] in {oid, did} for s in allstops]
             (oindex, dindex) = [i for i, e in enumerate(sameid) if e]
             stops = allstops[oindex+1:dindex]
-            subsubtrips = [{'arrivalTime': s['arrTime'], 'stop':
+            subsubtrips = [{'arrivalTime': truncate_time(s['arrTime']), 'stop':
                             s['name']} for s in stops]
         else:
             subsubtrips = []
         subtrip = {
-            'departureTime': st['Origin']['time'],
+            'departureTime': truncate_time(st['Origin']['time']),
             'origin': st['Origin']['name'],
             'trip': subsubtrips,
-            'arrivalTime': st['Destination']['time'],
+            'arrivalTime': truncate_time(st['Destination']['time']),
             'destination': st['Destination']['name'],
         }
         subtrips.append(subtrip)
     result = {
         'departureDate': received_subtrips[0]['Origin']['date'],
-        'departureTime': received_subtrips[0]['Origin']['time'],
+        'departureTime': truncate_time(received_subtrips[0]['Origin']['time']),
         'origin': startpoint['name'],
         'destination': endpoint['name'],
         'trip': subtrips,
     }
     return result
+
+
+def truncate_time(time_string: str):
+    """ HH:MM:SS -> HH:MM """
+    return ':'.join(time_string.split(':')[:2])
 
 
 def trip2str(trip):

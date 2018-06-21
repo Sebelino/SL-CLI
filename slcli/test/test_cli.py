@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from nose.tools import assert_equal, assert_less_equal, assert_greater_equal
-from slcli.slcli import travel, trip2str, main
+from slcli.sl_cli import travel, trip2str, main
 from datetime import datetime, timedelta
 import sys
 import re
