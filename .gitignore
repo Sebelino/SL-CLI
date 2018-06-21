@@ -1,2 +1,9 @@
+.coverage
+.idea
+__pycache__
+.ropeproject
 sensitive.xml
 venv
+SL_CLI.egg-info/
+build
+dist
