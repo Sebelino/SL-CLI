@@ -87,7 +87,7 @@ def travel(origin, destination, time):
     return result
 
 
-def truncate_time(time_string: str):
+def truncate_time(time_string):
     """ HH:MM:SS -> HH:MM """
     return ':'.join(time_string.split(':')[:2])
 
