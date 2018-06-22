@@ -10,6 +10,6 @@ install:
     - "pip install -r req-dev.txt"
 
 script:
-    - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then make coverage'
+    - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then make coverage; fi'
 
 after_success: coveralls
