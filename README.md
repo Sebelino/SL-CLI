@@ -38,8 +38,8 @@ Kopiera ./sensitive.xml till /home/sebelino/.config/sl-cli/sensitive.xml? (y/n) 
 > y
 Skapar kataloger...
 Kopierar ./sensitive.xml -> /home/sebelino/.config/sl-cli/sensitive.xml
-usage: sl-cli [-h] [--verbose] from to at
-sl-cli.py: error: the following arguments are required: from, to, at
+usage: sl-cli [-h] [--verbose] from to [at]
+sl-cli.py: error: the following arguments are required: from, to
 ```
 
 ## Dependencies
@@ -57,7 +57,7 @@ $ source venv/bin/activate
 Med executablen **sl-cli** får du reseinformation direkt i terminalen. Se manualen:
 ```bash
 $ sl-cli -h
-usage: sl-cli [-h] [--verbose] from to at
+usage: sl-cli [-h] [--verbose] from to [at]
 
 positional arguments:
   from           Varifrån ska du resa?
