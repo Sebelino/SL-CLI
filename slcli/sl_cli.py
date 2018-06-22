@@ -9,6 +9,7 @@ from pprint import pformat
 from time import time
 from shutil import copyfile
 from urllib.parse import unquote
+from datetime import datetime
 
 from slcli.apis.reseplanerare3 import tripapi, journeydetailapi as japi
 from slcli.apis.platsuppslag import api as papi
@@ -139,11 +140,15 @@ def main(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument('origin', metavar='from', help="Varifrån ska du resa?")
     parser.add_argument('to', help="Vart ska du?")
-    parser.add_argument('at', help="När ska du bege dig?")
+    parser.add_argument('at', help="När ska du bege dig?", nargs='?',
+                        default=datetime.now().strftime('%H:%M'))
     parser.add_argument('--verbose', '-v', action='store_true',
                         help="Skriv ut debuggutskrifter")
     check_keys_installed()
     args = args if args else parser.parse_args()
+    if type(args.at) is str:
+        # Convert H:MM to HH:MM
+        args.at = datetime.strptime(args.at, "%H:%M").strftime("%H:%M")
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
         starttime = time()
