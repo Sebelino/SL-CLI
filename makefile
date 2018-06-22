@@ -6,9 +6,9 @@ coverage:
 	               --cover-package=api \
 				   --cover-package=keyreader \
 				   --cover-package=platsuppslag \
-				   --cover-package=reseplanerare2 \
-				   --cover-package=reseplanerare2-journeydetail \
-				   --cover-package=reseplanerare2-trip
+				   --cover-package=reseplanerare3 \
+				   --cover-package=reseplanerare3-journeydetail \
+				   --cover-package=reseplanerare3-trip
 
 test:
 	@nosetests -vs

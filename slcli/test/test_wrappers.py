@@ -3,8 +3,8 @@
 from nose.tools import assert_equal
 from ..keyreader import get_keys
 from ..apis.platsuppslag import api as pu_api
-from ..apis.reseplanerare2 import tripapi as trip_api
-from ..apis.reseplanerare2 import journeydetailapi as jd_api
+from ..apis.reseplanerare3 import tripapi as trip_api
+from ..apis.reseplanerare3 import journeydetailapi as jd_api
 
 
 class TestPlatsuppslag:
@@ -26,12 +26,12 @@ class TestPlatsuppslag:
             yield assert_equal, returned, expected
 
 
-class TestReseplanerare2:
+class TestReseplanerare3:
     @classmethod
     def setup_class(cls):
         cls.trip_api = trip_api
         cls.jd_api = jd_api
-        cls.key = get_keys()['reseplanerare2']
+        cls.key = get_keys()['reseplanerare3']
 
     def test_trip_suggestions_count(self):
         params = [
@@ -40,6 +40,6 @@ class TestReseplanerare2:
         for a, b, t in params:
             d = {'key': self.key, 'originId': a, 'destId': b, 'time': t}
             response = self.trip_api.request(d)
-            tripcount = len(response['TripList']['Trip'])
+            tripcount = len(response['Trip'])
             expected = 5
             yield assert_equal, tripcount, expected

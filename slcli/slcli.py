@@ -10,7 +10,7 @@ from time import time
 from shutil import copyfile
 from urllib.parse import unquote
 
-from .apis.reseplanerare2 import tripapi, journeydetailapi as japi
+from .apis.reseplanerare3 import tripapi, journeydetailapi as japi
 from .apis.platsuppslag import api as papi
 from .keyreader import get_keys
 from .keyreader import KeysNotFoundError
@@ -36,10 +36,10 @@ def travel(origin, destination, time):
     startpoint = sitedata(origin)
     endpoint = sitedata(destination)
 
-    rresponse = tripapi.request({'key': apikeys['reseplanerare2'], 'originId':
+    rresponse = tripapi.request({'key': apikeys['reseplanerare3'], 'originId':
                                  startpoint['id'], 'destId': endpoint['id'],
-                                 'time': time})
-    trips = rresponse['TripList']['Trip']
+                                 'time': time, 'lang': 'sv'})
+    trips = rresponse['Trip']
     toptrip = trips[0]['LegList']['Leg']
     subtrips = []
     if isinstance(toptrip, dict):
@@ -53,10 +53,10 @@ def travel(origin, destination, time):
         if st['type'] == 'WALK':  # Skip information about walking
             continue
         if 'JourneyDetailRef' in st:
-            refvalue = unquote(st['JourneyDetailRef']['ref'][6:])
-            sstsresponse = japi.request({'key': apikeys['reseplanerare2'],
-                                         'ref': refvalue})
-            allstops = sstsresponse['JourneyDetail']['Stops']['Stop']
+            refvalue = unquote(st['JourneyDetailRef']['ref'])
+            sstsresponse = japi.request({'key': apikeys['reseplanerare3'],
+                                         'id': refvalue})
+            allstops = sstsresponse['Stops']['Stop']
             oid = st['Origin']['id']
             did = st['Destination']['id']
             sameid = [s['id'] in {oid, did} for s in allstops]
