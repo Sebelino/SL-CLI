@@ -3,6 +3,7 @@
 
 import argparse
 import logging
+import sys
 import os
 import os.path
 from pprint import pformat
@@ -40,7 +41,16 @@ def travel(origin, destination, time):
     rresponse = tripapi.request({'key': apikeys['reseplanerare3'], 'originId':
                                  startpoint['id'], 'destId': endpoint['id'],
                                  'time': time, 'lang': 'sv'})
-    trips = rresponse['Trip']
+    try:
+        trips = rresponse['Trip']
+    except KeyError as e:
+        # In rare cases, key 'Trip' is not found for some reason
+        if 'StatusCode' in rresponse and 'Message' in rresponse:
+            feedback_str = "{}: {}".format(rresponse['StatusCode'], rresponse['Message'])
+            print("The server for the Reseplanerare Trip API refused to provide the needed information because:\n{}\n".format(feedback_str), file=sys.stderr)
+        else:
+            print("Key 'Trip' was not found in the following JSON response:\n{}\n".format(rresponse), file=sys.stderr)
+        raise e
     toptrip = trips[0]['LegList']['Leg']
     subtrips = []
     if isinstance(toptrip, dict):
@@ -59,8 +69,13 @@ def travel(origin, destination, time):
                                          'id': refvalue})
             try:
                 allstops = sstsresponse['Stops']['Stop']
-            except KeyError:
-                raise  # In rare cases, key 'Stops' is not found for some reason
+            except KeyError as e:
+                if 'StatusCode' in sstsresponse and 'Message' in sstsresponse:
+                    feedback_str = "{}: {}".format(sstsresponse['StatusCode'], sstsresponse['Message'])
+                    print("The server for the Reseplanerare JourneyDetail API refused to provide the needed information because:\n{}\n".format(feedback_str), file=sys.stderr)
+                else:
+                    print("Key 'Stops' was not found in the following JSON response:\n{}\n".format(sstsresponse), file=sys.stderr)
+                raise e
             oid = st['Origin']['id']
             did = st['Destination']['id']
             sameid = [s['id'] in {oid, did} for s in allstops]
