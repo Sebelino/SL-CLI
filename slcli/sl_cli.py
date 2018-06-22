@@ -130,7 +130,7 @@ def check_keys_installed():
             answer = input("> ")
             if answer.lower().strip() == 'y':
                 print("Skapar kataloger...")
-                os.makedirs(os.path.dirname(dstpath))
+                os.makedirs(os.path.dirname(dstpath), exist_ok=True)
                 print("Kopierar {} -> {}".format(srcpath, dstpath))
                 copyfile(srcpath, dstpath)
 
