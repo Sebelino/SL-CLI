@@ -19,7 +19,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'sl-cli = slcli.slcli:main',
+            'sl-cli = slcli.sl_cli:main',
         ],
     },
     license='MIT',
