@@ -40,6 +40,7 @@ def travel(origin, destination, time):
                 print("The server for the Platsuppslag API refused to provide the needed information because:\n{}\n".format(feedback_str), file=sys.stderr)
             else:
                 print("Key 'ResponseData' was not found in the following JSON response:\n{}\n".format(presponse), file=sys.stderr)
+            raise e
         return {'name': topentry['Name'], 'id': topentry['SiteId']}
 
     startpoint = sitedata(origin)
