@@ -32,7 +32,14 @@ def travel(origin, destination, time):
     def sitedata(searchstring):
         presponse = papi.request({'key': apikeys['platsuppslag'],
                                   'searchstring': searchstring})
-        topentry = presponse['ResponseData'][0]
+        try:
+            topentry = presponse['ResponseData'][0]
+        except KeyError as e:
+            if 'StatusCode' in presponse and 'Message' in presponse:
+                feedback_str = "{}: {}".format(presponse['StatusCode'], presponse['Message'])
+                print("The server for the Platsuppslag API refused to provide the needed information because:\n{}\n".format(feedback_str), file=sys.stderr)
+            else:
+                print("Key 'ResponseData' was not found in the following JSON response:\n{}\n".format(presponse), file=sys.stderr)
         return {'name': topentry['Name'], 'id': topentry['SiteId']}
 
     startpoint = sitedata(origin)
