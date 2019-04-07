@@ -3,8 +3,8 @@
 from nose.tools import assert_equal
 from ..keyreader import get_keys
 from ..apis.platsuppslag import api as pu_api
-from ..apis.reseplanerare3 import tripapi as trip_api
-from ..apis.reseplanerare3 import journeydetailapi as jd_api
+from ..apis.reseplanerare3_1 import tripapi as trip_api
+from ..apis.reseplanerare3_1 import journeydetailapi as jd_api
 
 
 class TestPlatsuppslag:
@@ -31,7 +31,7 @@ class TestReseplanerare3:
     def setup_class(cls):
         cls.trip_api = trip_api
         cls.jd_api = jd_api
-        cls.key = get_keys()['reseplanerare3']
+        cls.key = get_keys()['reseplanerare3.1']
 
     def test_trip_suggestions_count(self):
         params = [
