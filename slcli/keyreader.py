@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import sys
 import os
 import os.path
 import errno
@@ -56,7 +57,33 @@ def read_keys(path):
     """ Reads API keys from the XML file specified by param path """
     tree = ET.parse(path)
     root = tree.getroot()
-    return {key.attrib['name']: key.text for key in root.iter('key')}
+    keys = {key.attrib['name']: key.text for key in root.iter('key')}
+
+    version_check_keys(keys, path)
+
+    return keys
+
+def version_check_keys(keys, path):
+    """ Exit if the configuration needs to be updated """
+    unsupported = {'reseplanerare2', 'reseplanerare3'}
+    current = 'reseplanerare3.1'
+    for api in unsupported:
+        if api in keys:
+            msg = "\n".join([
+                "API:t '{}' har ersatts av {} och kommer inte att stödjas längre.".format(api, current),
+                "",
+                "Var vänlig beställ en ny API-nyckel för {} på trafiklab.se och uppdatera följande rad i din {} från:".format(current, path),
+                "",
+                '- <key name="reseplanerare3">min_gamla_nyckel</key>',
+                "",
+                "till:",
+                "",
+                '+ <key name="reseplanerare3.1">min_nya_nyckel</key>',
+                "",
+                "Avbryter..."
+            ])
+            print(msg, file=sys.stderr)
+            sys.exit(1)
 
 if __name__ == '__main__':
     keys = get_keys()
