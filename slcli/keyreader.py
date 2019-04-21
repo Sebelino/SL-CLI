@@ -56,7 +56,7 @@ def read_keys(path):
     """ Reads API keys from the XML file specified by param path """
     tree = ET.parse(path)
     root = tree.getroot()
-    return dict([(key.attrib['name'], key.text) for key in root.iter('key')])
+    return {key.attrib['name']: key.text for key in root.iter('key')}
 
 if __name__ == '__main__':
     keys = get_keys()
