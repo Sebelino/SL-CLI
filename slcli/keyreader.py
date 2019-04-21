@@ -25,7 +25,7 @@ class KeysNotFoundError(IOError):
 def get_keys():
     keys = dict()
     keys["platsuppslag"] = os.environ.get("PLATSUPPSLAG")
-    keys["reseplanerare3"] = os.environ.get("RESEPLANERARE")
+    keys["reseplanerare3.1"] = os.environ.get("RESEPLANERARE")
     if all(k is None for k in keys.values()):
         return find_keys()
     else:

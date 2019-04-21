@@ -3,7 +3,7 @@
 
 from slcli.apis.api import API, cli
 
-tripapi = API(r'https://api.sl.se/api2/TravelplannerV3/trip.json', {
+tripapi = API(r'https://api.sl.se/api2/TravelplannerV3_1/trip.json', {
     'key': {'required': True, 'description': "Din API-nyckel.", 'position': 1},
     'originId': {'required': True,
                  'description': "ID för startpunkten.",
@@ -18,7 +18,7 @@ tripapi = API(r'https://api.sl.se/api2/TravelplannerV3/trip.json', {
 })
 
 journeydetailapi = \
-    API(r'https://api.sl.se/api2/TravelplannerV3/journeydetail.json', {
+    API(r'https://api.sl.se/api2/TravelplannerV3_1/journeydetail.json', {
         'key': {'required': True, 'description': "Din API-nyckel.",
                 'position': 1},
         'id': {'required': True, 'description': "Referensparameter erhållen "

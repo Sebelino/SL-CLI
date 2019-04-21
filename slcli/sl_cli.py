@@ -12,7 +12,7 @@ from shutil import copyfile
 from urllib.parse import unquote
 from datetime import datetime
 
-from slcli.apis.reseplanerare3 import tripapi, journeydetailapi as japi
+from slcli.apis.reseplanerare3_1 import tripapi, journeydetailapi as japi
 from slcli.apis.platsuppslag import api as papi
 from slcli.keyreader import get_keys
 from slcli.keyreader import KeysNotFoundError
@@ -46,7 +46,7 @@ def travel(origin, destination, time):
     startpoint = sitedata(origin)
     endpoint = sitedata(destination)
 
-    rresponse = tripapi.request({'key': apikeys['reseplanerare3'], 'originId':
+    rresponse = tripapi.request({'key': apikeys['reseplanerare3.1'], 'originId':
                                  startpoint['id'], 'destId': endpoint['id'],
                                  'time': time, 'lang': 'sv'})
     try:
@@ -73,7 +73,7 @@ def travel(origin, destination, time):
             continue
         if 'JourneyDetailRef' in st:
             refvalue = unquote(st['JourneyDetailRef']['ref'])
-            sstsresponse = japi.request({'key': apikeys['reseplanerare3'],
+            sstsresponse = japi.request({'key': apikeys['reseplanerare3.1'],
                                          'id': refvalue})
             try:
                 allstops = sstsresponse['Stops']['Stop']
